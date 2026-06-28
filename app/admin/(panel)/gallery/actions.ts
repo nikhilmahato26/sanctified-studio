@@ -1,0 +1,72 @@
+"use server";
+
+import { revalidatePath } from "next/cache";
+import {
+  cloudinary,
+  isCloudinaryConfigured,
+  galleryFolder,
+} from "@/lib/cloudinary";
+import { requireAdmin } from "@/lib/session";
+
+export type ActionState = { error?: string; ok?: boolean };
+
+const TYPES = ["wedding", "baby-shower"] as const;
+type GalleryType = (typeof TYPES)[number];
+
+export async function uploadGalleryImage(
+  type: GalleryType,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+  if (!isCloudinaryConfigured) {
+    return { error: "Cloudinary is not configured." };
+  }
+  if (!TYPES.includes(type)) return { error: "Invalid gallery." };
+
+  const file = formData.get("file");
+  if (!(file instanceof File) || file.size === 0) {
+    return { error: "Choose an image to upload." };
+  }
+  if (!file.type.startsWith("image/")) {
+    return { error: "Only image files are allowed." };
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    return { error: "Images must be under 10 MB." };
+  }
+
+  try {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const dataUri = `data:${file.type};base64,${buffer.toString("base64")}`;
+    await cloudinary.uploader.upload(dataUri, {
+      folder: galleryFolder(type),
+      resource_type: "image",
+    });
+  } catch (err) {
+    console.error("Cloudinary upload failed:", err);
+    return { error: "Upload failed. Please try again." };
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath(type === "wedding" ? "/weddings" : "/baby-showers");
+  return { ok: true };
+}
+
+export async function deleteGalleryImage(
+  publicId: string,
+  type: GalleryType,
+): Promise<ActionState> {
+  await requireAdmin();
+  if (!isCloudinaryConfigured) return { error: "Cloudinary is not configured." };
+
+  try {
+    await cloudinary.uploader.destroy(publicId);
+  } catch (err) {
+    console.error("Cloudinary delete failed:", err);
+    return { error: "Could not delete the image." };
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath(type === "wedding" ? "/weddings" : "/baby-showers");
+  return { ok: true };
+}

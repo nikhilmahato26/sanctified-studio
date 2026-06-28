@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     "Soft, joyful baby shower photography for the people welcoming someone new.",
 };
 
+// Pull live gallery images from Cloudinary at request time.
+export const revalidate = 300;
+
 export default async function BabyShowersPage() {
   const images = await getGalleryImages("baby-shower");
 

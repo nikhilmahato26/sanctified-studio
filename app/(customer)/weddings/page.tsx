@@ -13,6 +13,9 @@ export const metadata: Metadata = {
     "Unhurried, editorial wedding photography. From the first look to the last dance.",
 };
 
+// Pull live gallery images from Cloudinary at request time.
+export const revalidate = 300;
+
 export default async function WeddingsPage() {
   const images = await getGalleryImages("wedding");
 
