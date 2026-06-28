@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String // bcrypt hash
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id        String       @id @default(cuid())
+  displayId String       @unique // CLT-0001
+  name      String
+  phone     String
+  email     String
+  address   String?
+  status    ClientStatus @default(LEAD)
+  source    String? // "website" | "manual"
+  notes     String?
+  createdAt DateTime     @default(now())
+  events    Event[]
+}
+
+enum ClientStatus {
+  LEAD
+  POSITIVE
+  PROPOSAL_SENT
+  ADVANCE_RECEIVED
+  COMPLETED
+  CANCELLED
+}
+
+model Employee {
+  id          String            @id @default(cuid())
+  displayId   String            @unique // EMP-0001
+  name        String
+  phone       String
+  email       String
+  role        String // photographer, editor, assistant...
+  createdAt   DateTime          @default(now())
+  assignments EventAssignment[]
+  payouts     Payout[]
+}
+
+model Event {
+  id          String            @id @default(cuid())
+  clientId    String
+  client      Client            @relation(fields: [clientId], references: [id])
+  type        EventType
+  eventDate   DateTime
+  venue       String?
+  status      EventStatus       @default(UPCOMING)
+  createdAt   DateTime          @default(now())
+  proposal    Proposal?
+  assignments EventAssignment[]
+  payments    Payment[]
+  invoice     Invoice?
+}
+
+enum EventType {
+  WEDDING
+  BABY_SHOWER
+}
+
+enum EventStatus {
+  UPCOMING
+  COMPLETED
+  CANCELLED
+}
+
+model Proposal {
+  id        String         @id @default(cuid())
+  eventId   String         @unique
+  event     Event          @relation(fields: [eventId], references: [id])
+  lineItems Json // [{ label: string, amount: number }]
+  total     Float
+  notes     String?
+  status    ProposalStatus @default(DRAFT)
+  sentAt    DateTime?
+  createdAt DateTime       @default(now())
+}
+
+enum ProposalStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+}
+
+model EventAssignment {
+  id           String   @id @default(cuid())
+  eventId      String
+  event        Event    @relation(fields: [eventId], references: [id])
+  employeeId   String
+  employee     Employee @relation(fields: [employeeId], references: [id])
+  payoutAmount Float
+  payout       Payout?
+}
+
+model Payout {
+  id           String          @id @default(cuid())
+  assignmentId String          @unique
+  assignment   EventAssignment @relation(fields: [assignmentId], references: [id])
+  employeeId   String
+  employee     Employee        @relation(fields: [employeeId], references: [id])
+  amount       Float
+  isPaid       Boolean         @default(false)
+  paidAt       DateTime?
+}
+
+model Payment {
+  id         String      @id @default(cuid())
+  eventId    String
+  event      Event       @relation(fields: [eventId], references: [id])
+  type       PaymentType
+  amount     Float
+  receivedAt DateTime    @default(now())
+}
+
+enum PaymentType {
+  ADVANCE
+  FINAL
+}
+
+model Invoice {
+  id          String    @id @default(cuid())
+  eventId     String    @unique
+  event       Event     @relation(fields: [eventId], references: [id])
+  totalAmount Float
+  advancePaid Float
+  balanceDue  Float
+  sentAt      DateTime?
+  createdAt   DateTime  @default(now())
+}

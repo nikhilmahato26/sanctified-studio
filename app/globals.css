@@ -1,26 +1,74 @@
 @import "tailwindcss";
 
+@theme {
+  /* Brand palette — warm editorial beige */
+  --color-sand: #e9e0d4; /* hero / section backgrounds */
+  --color-cream: #f7f3ed; /* page base, cards */
+  --color-clay: #a1846b; /* footer block, accents */
+  --color-espresso: #3a322b; /* headings, body text */
+  --color-blush: #e4c9c2; /* baby shower accent */
+  --color-sage: #9ca88f; /* wedding accent */
+
+  /* Semantic aliases */
+  --color-background: #f7f3ed;
+  --color-foreground: #3a322b;
+  --color-muted: #8a7e70;
+  --color-line: #e3d9cb;
+
+  /* Fonts (wired to next/font CSS variables in layout.tsx) */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Radii */
+  --radius-2xl: 1rem;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f7f3ed;
+  --foreground: #3a322b;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-espresso);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Display serif helper */
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Visible keyboard focus rings */
+:focus-visible {
+  outline: 2px solid var(--color-clay);
+  outline-offset: 2px;
+}
+
+/* Respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Gentle gallery hover zoom */
+.zoom-on-hover {
+  overflow: hidden;
+}
+.zoom-on-hover img {
+  transition: transform 0.6s ease;
+}
+.zoom-on-hover:hover img {
+  transform: scale(1.05);
 }
