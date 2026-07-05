@@ -56,7 +56,8 @@ model Event {
   clientId    String
   client      Client            @relation(fields: [clientId], references: [id])
   type        EventType
-  eventDate   DateTime
+  eventDate   DateTime // start date
+  endDate     DateTime? // end date for multi-day events
   venue       String?
   status      EventStatus       @default(UPCOMING)
   createdAt   DateTime          @default(now())
@@ -78,15 +79,18 @@ enum EventStatus {
 }
 
 model Proposal {
-  id        String         @id @default(cuid())
-  eventId   String         @unique
-  event     Event          @relation(fields: [eventId], references: [id])
-  lineItems Json // [{ label: string, amount: number }]
-  total     Float
-  notes     String?
-  status    ProposalStatus @default(DRAFT)
-  sentAt    DateTime?
-  createdAt DateTime       @default(now())
+  id           String         @id @default(cuid())
+  eventId      String         @unique
+  event        Event          @relation(fields: [eventId], references: [id])
+  lineItems    Json           @default("[]") // legacy: [{ label, amount }] — superseded by timeline
+  timeline     Json           @default("[]") // [{ title, start, end, services: string[] }]
+  deliverables Json           @default("[]") // string[]
+  terms        Json           @default("[]") // string[]
+  total        Float          @default(0)
+  notes        String?
+  status       ProposalStatus @default(DRAFT)
+  sentAt       DateTime?
+  createdAt    DateTime       @default(now())
 }
 
 enum ProposalStatus {

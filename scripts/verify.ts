@@ -2,7 +2,6 @@ import { PrismaClient } from "@prisma/client";
 import { getFinance } from "@/lib/finance";
 import { renderProposalPdf } from "@/lib/pdf/proposal";
 import { renderInvoicePdf } from "@/lib/pdf/invoice";
-import { sumLineItems } from "@/lib/pdf/types";
 
 const prisma = new PrismaClient();
 
@@ -44,26 +43,41 @@ async function main() {
       clientId: client.id,
       type: "WEDDING",
       eventDate: new Date(year, month - 1, 20),
+      endDate: new Date(year, month - 1, 23),
       venue: "Garden Hall",
     },
   });
 
   // 3. Proposal
-  const lineItems = [
-    { label: "Full-day coverage", amount: 60000 },
-    { label: "Album", amount: 15000 },
+  const timeline = [
+    {
+      title: "Sangeet & Tilak",
+      start: `${year}-${String(month).padStart(2, "0")}-21`,
+      end: `${year}-${String(month).padStart(2, "0")}-21`,
+      services: ["Traditional photography", "Cinematic film"],
+    },
+    {
+      title: "Haldi & Wedding",
+      start: `${year}-${String(month).padStart(2, "0")}-23`,
+      end: `${year}-${String(month).padStart(2, "0")}-23`,
+      services: ["Candid photography", "Drone"],
+    },
   ];
-  const total = sumLineItems(lineItems);
+  const deliverables = ["300 edited photos", "Cinematic film 3 min"];
+  const terms = ["Avata drone cost will be extra."];
+  const total = 75000;
   const proposal = await prisma.proposal.create({
     data: {
       eventId: event.id,
-      lineItems,
+      timeline,
+      deliverables,
+      terms,
       total,
       status: "SENT",
       sentAt: new Date(),
     },
   });
-  assert("proposal total = sum(line items)", proposal.total === 75000, `got ${proposal.total}`);
+  assert("proposal total persisted", proposal.total === 75000, `got ${proposal.total}`);
 
   // 4. Advance payment -> client ADVANCE_RECEIVED
   await prisma.payment.create({
@@ -142,9 +156,12 @@ async function main() {
     clientName: client.name,
     clientEmail: client.email,
     eventType: "Wedding",
-    eventDate: "20 Jun 2026",
+    eventKind: "WEDDING",
+    eventDate: "20 Jun 2026 – 23 Jun 2026",
     venue: "Garden Hall",
-    lineItems,
+    timeline,
+    deliverables,
+    terms,
     total,
     notes: "Thank you.",
     date: "29 Jun 2026",

@@ -7,25 +7,45 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import { sendMail } from "@/lib/mailer";
 import { renderProposalPdf } from "@/lib/pdf/proposal";
-import { parseLineItems, sumLineItems, type LineItem } from "@/lib/pdf/types";
-import { formatDate } from "@/lib/utils";
+import {
+  parseTimeline,
+  parseStringList,
+  type TimelineItem,
+} from "@/lib/pdf/types";
+import { formatDate, formatDateRange, toDateInput } from "@/lib/utils";
 import { EVENT_TYPE } from "@/lib/status";
 
 export type ActionState = { error?: string; ok?: boolean };
 
-function defaultLineItems(type: "WEDDING" | "BABY_SHOWER"): LineItem[] {
-  if (type === "WEDDING") {
-    return [
-      { label: "Full-day photography coverage", amount: 60000 },
-      { label: "Edited online gallery", amount: 15000 },
-      { label: "Highlight album", amount: 10000 },
-    ];
-  }
+export interface ProposalDraft {
+  timeline: TimelineItem[];
+  deliverables: string[];
+  terms: string[];
+  total: number;
+  notes: string;
+}
+
+/** A starter timeline stage seeded from the event's date range. */
+function defaultTimeline(start: Date, end: Date | null): TimelineItem[] {
   return [
-    { label: "Photography coverage", amount: 18000 },
-    { label: "Edited online gallery", amount: 8000 },
+    {
+      title: "Day 1",
+      start: toDateInput(start),
+      end: toDateInput(end ?? start),
+      services: [
+        "Traditional photography",
+        "Traditional video",
+        "Candid photography",
+      ],
+    },
   ];
 }
+
+const DEFAULT_TERMS = [
+  "Avata drone cost will be extra.",
+  "Content creation reels charges will be extra.",
+  "50% advance required to confirm the booking.",
+];
 
 export async function createProposal(eventId: string) {
   await requireAdmin();
@@ -36,12 +56,16 @@ export async function createProposal(eventId: string) {
   if (!event) throw new Error("Event not found");
   if (event.proposal) redirect(`/admin/proposals/${event.proposal.id}`);
 
-  const items = defaultLineItems(event.type);
   const proposal = await prisma.proposal.create({
     data: {
       eventId,
-      lineItems: items as unknown as Prisma.InputJsonValue,
-      total: sumLineItems(items),
+      timeline: defaultTimeline(
+        event.eventDate,
+        event.endDate,
+      ) as unknown as Prisma.InputJsonValue,
+      deliverables: [] as unknown as Prisma.InputJsonValue,
+      terms: DEFAULT_TERMS as unknown as Prisma.InputJsonValue,
+      total: 0,
       status: "DRAFT",
     },
   });
@@ -52,20 +76,34 @@ export async function createProposal(eventId: string) {
 
 export async function updateProposal(
   proposalId: string,
-  items: LineItem[],
-  notes: string,
+  draft: ProposalDraft,
 ): Promise<ActionState> {
   await requireAdmin();
-  const clean = items
-    .map((i) => ({ label: String(i.label).trim(), amount: Number(i.amount) || 0 }))
-    .filter((i) => i.label.length > 0);
+
+  const timeline = draft.timeline
+    .map((t) => ({
+      title: String(t.title).trim(),
+      start: String(t.start).trim(),
+      end: String(t.end).trim(),
+      services: (t.services ?? [])
+        .map((s) => String(s).trim())
+        .filter((s) => s.length > 0),
+    }))
+    .filter((t) => t.title.length > 0 || t.services.length > 0);
+
+  const deliverables = draft.deliverables
+    .map((d) => String(d).trim())
+    .filter((d) => d.length > 0);
+  const terms = draft.terms.map((t) => String(t).trim()).filter((t) => t.length > 0);
 
   await prisma.proposal.update({
     where: { id: proposalId },
     data: {
-      lineItems: clean as unknown as Prisma.InputJsonValue,
-      total: sumLineItems(clean),
-      notes: notes.trim() || null,
+      timeline: timeline as unknown as Prisma.InputJsonValue,
+      deliverables: deliverables as unknown as Prisma.InputJsonValue,
+      terms: terms as unknown as Prisma.InputJsonValue,
+      total: Number(draft.total) || 0,
+      notes: draft.notes.trim() || null,
     },
   });
 
@@ -84,7 +122,6 @@ export async function sendProposal(proposalId: string): Promise<ActionState> {
 
   const { event } = proposal;
   const { client } = event;
-  const items = parseLineItems(proposal.lineItems);
 
   let pdf: Buffer;
   try {
@@ -93,9 +130,12 @@ export async function sendProposal(proposalId: string): Promise<ActionState> {
       clientName: client.name,
       clientEmail: client.email,
       eventType: EVENT_TYPE[event.type].label,
-      eventDate: formatDate(event.eventDate),
+      eventKind: event.type,
+      eventDate: formatDateRange(event.eventDate, event.endDate),
       venue: event.venue,
-      lineItems: items,
+      timeline: parseTimeline(proposal.timeline),
+      deliverables: parseStringList(proposal.deliverables),
+      terms: parseStringList(proposal.terms),
       total: proposal.total,
       notes: proposal.notes,
       date: formatDate(new Date()),
@@ -124,8 +164,7 @@ export async function sendProposal(proposalId: string): Promise<ActionState> {
   } catch (err) {
     console.error("Proposal email failed:", err);
     return {
-      error:
-        err instanceof Error ? err.message : "Could not send the email.",
+      error: err instanceof Error ? err.message : "Could not send the email.",
     };
   }
 

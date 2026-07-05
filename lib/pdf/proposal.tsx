@@ -7,7 +7,9 @@ import {
   StyleSheet,
   renderToBuffer,
 } from "@react-pdf/renderer";
-import type { LineItem } from "@/lib/pdf/types";
+import type { TimelineItem } from "@/lib/pdf/types";
+import { EventDetailPages, type EventKind } from "@/lib/pdf/event-details";
+import { formatDateRange } from "@/lib/utils";
 
 const COLORS = {
   espresso: "#3A322B",
@@ -44,15 +46,24 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     marginBottom: 6,
   },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 8,
+  // Timeline
+  stage: {
+    marginBottom: 12,
+    paddingBottom: 12,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.line,
   },
-  itemLabel: { flex: 1, paddingRight: 12 },
-  amount: { fontFamily: "Helvetica-Bold" },
+  stageHead: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    marginBottom: 4,
+  },
+  stageTitle: { fontSize: 12, fontFamily: "Helvetica-Bold" },
+  stageDate: { fontSize: 10, color: COLORS.clay },
+  bulletRow: { flexDirection: "row", marginTop: 3, paddingRight: 8 },
+  bulletDot: { width: 12, color: COLORS.clay },
+  bulletText: { flex: 1 },
   totalRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -79,17 +90,37 @@ function inr(n: number) {
   return "INR " + n.toLocaleString("en-IN");
 }
 
+/** Format a timeline stage's date range from stored ISO date strings. */
+function stageDates(start: string, end: string): string {
+  if (!start && !end) return "";
+  if (!start) return formatDateRange(end);
+  return formatDateRange(start, end || null);
+}
+
 export interface ProposalPdfData {
   proposalNumber: string;
   clientName: string;
   clientEmail: string;
   eventType: string;
+  /** Raw event kind, drives which detailed pages lead the proposal. */
+  eventKind: EventKind;
   eventDate: string;
   venue?: string | null;
-  lineItems: LineItem[];
+  timeline: TimelineItem[];
+  deliverables: string[];
+  terms: string[];
   total: number;
   notes?: string | null;
   date: string;
+}
+
+function Bullet({ children }: { children: string }) {
+  return (
+    <View style={styles.bulletRow}>
+      <Text style={styles.bulletDot}>•</Text>
+      <Text style={styles.bulletText}>{children}</Text>
+    </View>
+  );
 }
 
 function ProposalDocument({ data }: { data: ProposalPdfData }) {
@@ -98,7 +129,10 @@ function ProposalDocument({ data }: { data: ProposalPdfData }) {
       title={`Proposal ${data.proposalNumber}`}
       author="Sanctified Studio"
     >
-      <Page size="A4" style={styles.page}>
+      {/* Detailed event pages lead the document; the quote page is last. */}
+      <EventDetailPages eventKind={data.eventKind} />
+
+      <Page size="A4" style={styles.page} wrap>
         <View>
           <Text style={styles.brand}>Sanctified Studio</Text>
           <Text style={styles.tagline}>Moments worth keeping.</Text>
@@ -108,7 +142,7 @@ function ProposalDocument({ data }: { data: ProposalPdfData }) {
 
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View>
-            <Text style={styles.h1}>Photography proposal</Text>
+            <Text style={styles.h1}>Photography quotation</Text>
             <Text style={styles.meta}>No. {data.proposalNumber}</Text>
             <Text style={styles.meta}>Date: {data.date}</Text>
           </View>
@@ -127,19 +161,50 @@ function ProposalDocument({ data }: { data: ProposalPdfData }) {
           </Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.label}>Investment</Text>
-          {data.lineItems.map((item, i) => (
-            <View style={styles.row} key={i}>
-              <Text style={styles.itemLabel}>{item.label}</Text>
-              <Text style={styles.amount}>{inr(item.amount)}</Text>
-            </View>
-          ))}
-          <View style={styles.totalRow}>
-            <Text style={styles.totalLabel}>Total</Text>
-            <Text style={styles.totalValue}>{inr(data.total)}</Text>
+        {data.timeline.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.label}>Event timeline</Text>
+            {data.timeline.map((stage, i) => {
+              const dates = stageDates(stage.start, stage.end);
+              return (
+                <View style={styles.stage} key={i} wrap={false}>
+                  <View style={styles.stageHead}>
+                    <Text style={styles.stageTitle}>
+                      {stage.title || `Stage ${i + 1}`}
+                    </Text>
+                    {dates ? <Text style={styles.stageDate}>{dates}</Text> : null}
+                  </View>
+                  {stage.services.map((s, j) => (
+                    <Bullet key={j}>{s}</Bullet>
+                  ))}
+                </View>
+              );
+            })}
           </View>
+        )}
+
+        <View style={styles.totalRow}>
+          <Text style={styles.totalLabel}>Total</Text>
+          <Text style={styles.totalValue}>{inr(data.total)}</Text>
         </View>
+
+        {data.deliverables.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.label}>Deliverables</Text>
+            {data.deliverables.map((d, i) => (
+              <Bullet key={i}>{d}</Bullet>
+            ))}
+          </View>
+        )}
+
+        {data.terms.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.label}>Terms &amp; conditions</Text>
+            {data.terms.map((t, i) => (
+              <Bullet key={i}>{t}</Bullet>
+            ))}
+          </View>
+        )}
 
         {data.notes ? (
           <View style={styles.section}>
@@ -148,7 +213,7 @@ function ProposalDocument({ data }: { data: ProposalPdfData }) {
           </View>
         ) : null}
 
-        <Text style={styles.footer}>
+        <Text style={styles.footer} fixed>
           Sanctified Studio · hello@sanctifiedstudio.com · Thank you for
           considering us.
         </Text>

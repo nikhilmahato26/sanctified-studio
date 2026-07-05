@@ -8,12 +8,18 @@ import { requireAdmin } from "@/lib/session";
 
 export type ActionState = { error?: string; ok?: boolean };
 
-const createSchema = z.object({
-  clientId: z.string().min(1, "Client is required"),
-  type: z.enum(["WEDDING", "BABY_SHOWER"]),
-  eventDate: z.string().min(1, "Date is required"),
-  venue: z.string().optional(),
-});
+const createSchema = z
+  .object({
+    clientId: z.string().min(1, "Client is required"),
+    type: z.enum(["WEDDING", "BABY_SHOWER"]),
+    eventDate: z.string().min(1, "Start date is required"),
+    endDate: z.string().optional(),
+    venue: z.string().optional(),
+  })
+  .refine(
+    (d) => !d.endDate || new Date(d.endDate) >= new Date(d.eventDate),
+    { message: "End date must be on or after the start date", path: ["endDate"] },
+  );
 
 export async function createEvent(
   _prev: ActionState,
@@ -24,13 +30,14 @@ export async function createEvent(
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
-  const { clientId, type, eventDate, venue } = parsed.data;
+  const { clientId, type, eventDate, endDate, venue } = parsed.data;
 
   const event = await prisma.event.create({
     data: {
       clientId,
       type,
       eventDate: new Date(eventDate),
+      endDate: endDate ? new Date(endDate) : null,
       venue: venue || null,
     },
   });
@@ -91,14 +98,48 @@ export async function recordPayment(
     data: { eventId, type, amount },
   });
 
-  // Recording an advance moves the client to ADVANCE_RECEIVED.
+  // Recording an advance moves the client to ADVANCE_RECEIVED and marks
+  // the proposal as accepted — paying the advance is the acceptance signal.
   if (type === "ADVANCE") {
-    await prisma.client.update({
-      where: { id: event.clientId },
-      data: { status: "ADVANCE_RECEIVED" },
-    });
+    await prisma.$transaction([
+      prisma.client.update({
+        where: { id: event.clientId },
+        data: { status: "ADVANCE_RECEIVED" },
+      }),
+      prisma.proposal.updateMany({
+        where: { eventId, status: { not: "ACCEPTED" } },
+        data: { status: "ACCEPTED" },
+      }),
+    ]);
   }
+
+  // Keep an existing invoice in sync so its balance due reflects every
+  // payment (advance and final), not just the advance it was created with.
+  await recalcInvoice(eventId);
 
   revalidatePath(`/admin/events/${eventId}`);
   return { ok: true };
+}
+
+/**
+ * Recomputes an event's invoice from all recorded payments. No-op if the event
+ * has no invoice yet. Paid = sum of every payment; balance due = total − paid.
+ */
+export async function recalcInvoice(eventId: string) {
+  const invoice = await prisma.invoice.findUnique({ where: { eventId } });
+  if (!invoice) return;
+
+  const payments = await prisma.payment.findMany({
+    where: { eventId },
+    select: { amount: true },
+  });
+  const paid = payments.reduce((sum, p) => sum + p.amount, 0);
+
+  await prisma.invoice.update({
+    where: { eventId },
+    data: {
+      advancePaid: paid,
+      balanceDue: Math.max(0, invoice.totalAmount - paid),
+    },
+  });
 }

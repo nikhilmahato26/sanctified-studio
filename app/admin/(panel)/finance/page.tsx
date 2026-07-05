@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireAdmin } from "@/lib/session";
 import { getFinance } from "@/lib/finance";
 import { PageHeader, EmptyState } from "@/components/admin/PageHeader";
@@ -88,7 +89,12 @@ export default async function FinancePage({
                   {data.perEmployee.map((e) => (
                     <TR key={e.employeeId}>
                       <TD>
-                        <div className="text-espresso">{e.name}</div>
+                        <Link
+                          href={`/admin/employees/${e.employeeId}`}
+                          className="text-espresso hover:underline"
+                        >
+                          {e.name}
+                        </Link>
                         <div className="font-mono text-xs text-muted">
                           {e.displayId}
                         </div>

@@ -6,52 +6,116 @@ import {
   updateProposal,
   sendProposal,
 } from "@/app/admin/(panel)/proposals/actions";
-import type { LineItem } from "@/lib/pdf/types";
+import type { TimelineItem } from "@/lib/pdf/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { formatCurrency } from "@/lib/utils";
 
+/** Editor for a flat list of short text lines (deliverables, terms, services). */
+function StringListEditor({
+  items,
+  onChange,
+  placeholder,
+  addLabel,
+}: {
+  items: string[];
+  onChange: (next: string[]) => void;
+  placeholder: string;
+  addLabel: string;
+}) {
+  return (
+    <div className="space-y-2">
+      {items.map((value, i) => (
+        <div key={i} className="flex items-center gap-2">
+          <Input
+            value={value}
+            placeholder={placeholder}
+            onChange={(e) =>
+              onChange(items.map((v, idx) => (idx === i ? e.target.value : v)))
+            }
+            className="flex-1"
+          />
+          <button
+            type="button"
+            onClick={() => onChange(items.filter((_, idx) => idx !== i))}
+            aria-label="Remove"
+            className="rounded-lg p-2 text-muted hover:bg-espresso/5 hover:text-red-700"
+          >
+            <Trash2 className="size-4" />
+          </button>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        onClick={() => onChange([...items, ""])}
+      >
+        <Plus className="size-4" /> {addLabel}
+      </Button>
+    </div>
+  );
+}
+
 export function ProposalEditor({
   proposalId,
-  initialItems,
+  initialTimeline,
+  initialDeliverables,
+  initialTerms,
+  initialTotal,
   initialNotes,
   status,
 }: {
   proposalId: string;
-  initialItems: LineItem[];
+  initialTimeline: TimelineItem[];
+  initialDeliverables: string[];
+  initialTerms: string[];
+  initialTotal: number;
   initialNotes: string;
   status: "DRAFT" | "SENT" | "ACCEPTED";
 }) {
-  const [items, setItems] = useState<LineItem[]>(
-    initialItems.length ? initialItems : [{ label: "", amount: 0 }],
+  const [timeline, setTimeline] = useState<TimelineItem[]>(
+    initialTimeline.length
+      ? initialTimeline
+      : [{ title: "", start: "", end: "", services: [""] }],
   );
+  const [deliverables, setDeliverables] = useState<string[]>(
+    initialDeliverables.length ? initialDeliverables : [""],
+  );
+  const [terms, setTerms] = useState<string[]>(
+    initialTerms.length ? initialTerms : [""],
+  );
+  const [total, setTotal] = useState<number>(initialTotal);
   const [notes, setNotes] = useState(initialNotes);
   const [savePending, startSave] = useTransition();
   const [sendPending, startSend] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const total = items.reduce((acc, i) => acc + (Number(i.amount) || 0), 0);
-
-  function updateItem(i: number, patch: Partial<LineItem>) {
-    setItems((prev) =>
-      prev.map((it, idx) => (idx === i ? { ...it, ...patch } : it)),
+  function updateStage(i: number, patch: Partial<TimelineItem>) {
+    setTimeline((prev) =>
+      prev.map((s, idx) => (idx === i ? { ...s, ...patch } : s)),
     );
   }
-  function addItem() {
-    setItems((prev) => [...prev, { label: "", amount: 0 }]);
+  function addStage() {
+    setTimeline((prev) => [
+      ...prev,
+      { title: "", start: "", end: "", services: [""] },
+    ]);
   }
-  function removeItem(i: number) {
-    setItems((prev) => prev.filter((_, idx) => idx !== i));
+  function removeStage(i: number) {
+    setTimeline((prev) => prev.filter((_, idx) => idx !== i));
   }
+
+  const draft = { timeline, deliverables, terms, total, notes };
 
   function save() {
     setMessage(null);
     setError(null);
     startSave(async () => {
-      const res = await updateProposal(proposalId, items, notes);
+      const res = await updateProposal(proposalId, draft);
       if (res.error) setError(res.error);
       else setMessage("Saved.");
     });
@@ -61,8 +125,7 @@ export function ProposalEditor({
     setMessage(null);
     setError(null);
     startSend(async () => {
-      // Persist latest edits first, then send.
-      const saved = await updateProposal(proposalId, items, notes);
+      const saved = await updateProposal(proposalId, draft);
       if (saved.error) {
         setError(saved.error);
         return;
@@ -74,35 +137,59 @@ export function ProposalEditor({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Event timeline */}
       <div>
-        <Label>Price line items</Label>
-        <div className="space-y-2">
-          {items.map((item, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <Input
-                value={item.label}
-                placeholder="Description"
-                onChange={(e) => updateItem(i, { label: e.target.value })}
-                className="flex-1"
+        <Label>Event timeline</Label>
+        <div className="space-y-4">
+          {timeline.map((stage, i) => (
+            <div
+              key={i}
+              className="rounded-xl border border-line bg-sand/30 p-4"
+            >
+              <div className="mb-3 flex items-center gap-2">
+                <Input
+                  value={stage.title}
+                  placeholder="Stage title (e.g. Sangeet & Tilak)"
+                  onChange={(e) => updateStage(i, { title: e.target.value })}
+                  className="flex-1 font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeStage(i)}
+                  aria-label="Remove stage"
+                  className="rounded-lg p-2 text-muted hover:bg-espresso/5 hover:text-red-700"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              </div>
+
+              <div className="mb-3 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <Label className="text-xs">Start date</Label>
+                  <Input
+                    type="date"
+                    value={stage.start}
+                    onChange={(e) => updateStage(i, { start: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs">End date</Label>
+                  <Input
+                    type="date"
+                    value={stage.end}
+                    onChange={(e) => updateStage(i, { end: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <Label className="text-xs">Services</Label>
+              <StringListEditor
+                items={stage.services}
+                onChange={(next) => updateStage(i, { services: next })}
+                placeholder="e.g. Candid photography"
+                addLabel="Add service"
               />
-              <Input
-                type="number"
-                value={item.amount || ""}
-                placeholder="0"
-                onChange={(e) =>
-                  updateItem(i, { amount: Number(e.target.value) })
-                }
-                className="w-36"
-              />
-              <button
-                type="button"
-                onClick={() => removeItem(i)}
-                aria-label="Remove line"
-                className="rounded-lg p-2 text-muted hover:bg-espresso/5 hover:text-red-700"
-              >
-                <Trash2 className="size-4" />
-              </button>
             </div>
           ))}
         </div>
@@ -110,27 +197,61 @@ export function ProposalEditor({
           type="button"
           variant="ghost"
           size="sm"
-          className="mt-2"
-          onClick={addItem}
+          className="mt-3"
+          onClick={addStage}
         >
-          <Plus className="size-4" /> Add line
+          <Plus className="size-4" /> Add stage
         </Button>
       </div>
 
-      <div className="flex items-center justify-between rounded-xl bg-sand/60 px-4 py-3">
-        <span className="text-sm uppercase tracking-wide text-muted">Total</span>
-        <span className="font-display text-2xl text-espresso">
-          {formatCurrency(total)}
-        </span>
+      {/* Total price */}
+      <div>
+        <Label htmlFor="total">Total price</Label>
+        <div className="flex items-center gap-4">
+          <Input
+            id="total"
+            type="number"
+            value={total || ""}
+            placeholder="0"
+            onChange={(e) => setTotal(Number(e.target.value))}
+            className="w-48"
+          />
+          <span className="font-display text-xl text-espresso">
+            {formatCurrency(total || 0)}
+          </span>
+        </div>
       </div>
 
+      {/* Deliverables */}
+      <div>
+        <Label>Deliverables</Label>
+        <StringListEditor
+          items={deliverables}
+          onChange={setDeliverables}
+          placeholder="e.g. 300 edited photos"
+          addLabel="Add deliverable"
+        />
+      </div>
+
+      {/* Terms & conditions */}
+      <div>
+        <Label>Terms &amp; conditions</Label>
+        <StringListEditor
+          items={terms}
+          onChange={setTerms}
+          placeholder="e.g. Avata drone cost will be extra"
+          addLabel="Add term"
+        />
+      </div>
+
+      {/* Notes */}
       <div>
         <Label htmlFor="notes">Notes (optional)</Label>
         <Textarea
           id="notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Anything the client should know…"
+          placeholder="Anything else the client should know…"
         />
       </div>
 

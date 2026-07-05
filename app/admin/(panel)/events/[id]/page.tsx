@@ -16,7 +16,7 @@ import { PaymentForm } from "@/components/admin/PaymentForm";
 import { EventAssignments } from "@/components/admin/EventAssignments";
 import { InvoiceCard } from "@/components/admin/InvoiceCard";
 import { PAYMENT_TYPE } from "@/lib/status";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate, formatDateRange } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
@@ -46,9 +46,6 @@ export default async function EventDetailPage({
   });
 
   const totalReceived = event.payments.reduce((a, p) => a + p.amount, 0);
-  const advancePaid = event.payments
-    .filter((p) => p.type === "ADVANCE")
-    .reduce((a, p) => a + p.amount, 0);
 
   return (
     <>
@@ -69,7 +66,7 @@ export default async function EventDetailPage({
             <EventStatusBadge status={event.status} />
           </div>
           <p className="mt-1 text-sm text-muted">
-            {formatDate(event.eventDate)}
+            {formatDateRange(event.eventDate, event.endDate)}
             {event.venue ? ` · ${event.venue}` : ""}
           </p>
         </div>
@@ -199,7 +196,7 @@ export default async function EventDetailPage({
             }
             canCreate={Boolean(event.proposal)}
             proposalTotal={event.proposal?.total ?? 0}
-            advancePaid={advancePaid}
+            paid={totalReceived}
           />
         </div>
       </div>

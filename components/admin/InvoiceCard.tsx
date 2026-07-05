@@ -23,13 +23,13 @@ export function InvoiceCard({
   invoice,
   canCreate,
   proposalTotal,
-  advancePaid,
+  paid,
 }: {
   eventId: string;
   invoice: InvoiceData | null;
   canCreate: boolean;
   proposalTotal: number;
-  advancePaid: number;
+  paid: number;
 }) {
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export function InvoiceCard({
             <div className="rounded-xl bg-sand/60 px-4 py-3">
               <Row label="Total" value={formatCurrency(invoice.totalAmount)} />
               <Row
-                label="Advance paid"
+                label="Paid"
                 value={`− ${formatCurrency(invoice.advancePaid)}`}
               />
               <div className="mt-1 border-t border-line pt-1">
@@ -115,13 +115,13 @@ export function InvoiceCard({
             <div className="rounded-xl bg-sand/60 px-4 py-3">
               <Row label="Proposal total" value={formatCurrency(proposalTotal)} />
               <Row
-                label="Advance paid"
-                value={`− ${formatCurrency(advancePaid)}`}
+                label="Paid"
+                value={`− ${formatCurrency(paid)}`}
               />
               <div className="mt-1 border-t border-line pt-1">
                 <Row
                   label="Balance due"
-                  value={formatCurrency(Math.max(0, proposalTotal - advancePaid))}
+                  value={formatCurrency(Math.max(0, proposalTotal - paid))}
                   strong
                 />
               </div>

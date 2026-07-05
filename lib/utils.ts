@@ -22,3 +22,26 @@ export function formatDate(date: Date | string): string {
     year: "numeric",
   }).format(new Date(date));
 }
+
+/**
+ * Format a start/end pair as a range, e.g. "21 Nov 2026 – 24 Nov 2026".
+ * Falls back to a single date when there is no end (or it matches the start).
+ */
+export function formatDateRange(
+  start: Date | string,
+  end?: Date | string | null,
+): string {
+  const startStr = formatDate(start);
+  if (!end) return startStr;
+  const endStr = formatDate(end);
+  return endStr === startStr ? startStr : `${startStr} – ${endStr}`;
+}
+
+/** Convert a Date to a "yyyy-mm-dd" string for <input type="date">. */
+export function toDateInput(date: Date | string): string {
+  const d = new Date(date);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}

@@ -10,7 +10,7 @@ import { EVENT_TYPE } from "@/lib/status";
 
 export type ActionState = { error?: string; ok?: boolean };
 
-/** Create or refresh an invoice from the event's proposal + advance payments. */
+/** Create or refresh an invoice from the event's proposal + all payments. */
 export async function createInvoice(eventId: string): Promise<ActionState> {
   await requireAdmin();
 
@@ -24,15 +24,14 @@ export async function createInvoice(eventId: string): Promise<ActionState> {
   }
 
   const totalAmount = event.proposal.total;
-  const advancePaid = event.payments
-    .filter((p) => p.type === "ADVANCE")
-    .reduce((a, p) => a + p.amount, 0);
-  const balanceDue = Math.max(0, totalAmount - advancePaid);
+  // Count every payment received so far, not just the advance.
+  const paid = event.payments.reduce((a, p) => a + p.amount, 0);
+  const balanceDue = Math.max(0, totalAmount - paid);
 
   await prisma.invoice.upsert({
     where: { eventId },
-    update: { totalAmount, advancePaid, balanceDue },
-    create: { eventId, totalAmount, advancePaid, balanceDue },
+    update: { totalAmount, advancePaid: paid, balanceDue },
+    create: { eventId, totalAmount, advancePaid: paid, balanceDue },
   });
 
   revalidatePath(`/admin/events/${eventId}`);

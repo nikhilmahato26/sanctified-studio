@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+      "Bash(ping -c 1 -t 3 google.com)",
+      "Bash(host ep-frosty-waterfall-athsbix5-pooler.c-9.us-east-1.aws.neon.tech)",
+      "Bash(nc -z -w 5 ep-frosty-waterfall-athsbix5-pooler.c-9.us-east-1.aws.neon.tech 5432)",
+      "Bash(npx tsx -e ' *)",
+      "Bash(awk '{print $2, $11, $12, $13}')",
+      "Bash(kill 30196 30197)",
+      "Bash(NODE_OPTIONS=--conditions=react-server npx tsx -e ' *)",
+      "mcp__plugin_context-mode_context-mode__ctx_execute",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(npx eslint *)",
+      "Bash(npx tsx *)",
+      "Bash(node --conditions=react-server --import tsx \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/render-test.ts\")",
+      "Bash(node --import tsx --loader \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/stub-loader.mjs\" \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/render-test.ts\")",
+      "Bash(node --require \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/preload.cjs\" --import tsx \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/render-test.ts\")"
+    ]
+  }
+}

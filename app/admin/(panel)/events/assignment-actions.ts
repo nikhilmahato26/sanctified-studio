@@ -46,6 +46,8 @@ export async function assignEmployee(
   });
 
   revalidatePath(`/admin/events/${eventId}`);
+  revalidatePath("/admin/employees");
+  revalidatePath(`/admin/employees/${employeeId}`);
   return { ok: true };
 }
 
@@ -64,13 +66,16 @@ export async function togglePayoutPaid(payoutId: string, eventId: string) {
 
   revalidatePath(`/admin/events/${eventId}`);
   revalidatePath("/admin/employees");
+  revalidatePath(`/admin/employees/${payout.employeeId}`);
 }
 
 export async function removeAssignment(assignmentId: string, eventId: string) {
   await requireAdmin();
-  await prisma.$transaction([
+  const [, assignment] = await prisma.$transaction([
     prisma.payout.deleteMany({ where: { assignmentId } }),
     prisma.eventAssignment.delete({ where: { id: assignmentId } }),
   ]);
   revalidatePath(`/admin/events/${eventId}`);
+  revalidatePath("/admin/employees");
+  revalidatePath(`/admin/employees/${assignment.employeeId}`);
 }

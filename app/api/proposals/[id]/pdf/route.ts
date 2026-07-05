@@ -1,8 +1,8 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { renderProposalPdf } from "@/lib/pdf/proposal";
-import { parseLineItems } from "@/lib/pdf/types";
-import { formatDate } from "@/lib/utils";
+import { parseTimeline, parseStringList } from "@/lib/pdf/types";
+import { formatDate, formatDateRange } from "@/lib/utils";
 import { EVENT_TYPE } from "@/lib/status";
 
 export const runtime = "nodejs";
@@ -29,9 +29,12 @@ export async function GET(
     clientName: event.client.name,
     clientEmail: event.client.email,
     eventType: EVENT_TYPE[event.type].label,
-    eventDate: formatDate(event.eventDate),
+    eventKind: event.type,
+    eventDate: formatDateRange(event.eventDate, event.endDate),
     venue: event.venue,
-    lineItems: parseLineItems(proposal.lineItems),
+    timeline: parseTimeline(proposal.timeline),
+    deliverables: parseStringList(proposal.deliverables),
+    terms: parseStringList(proposal.terms),
     total: proposal.total,
     notes: proposal.notes,
     date: formatDate(new Date()),

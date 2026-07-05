@@ -61,8 +61,12 @@ export function EventForm({
           </Select>
         </div>
         <div>
-          <Label htmlFor="eventDate">Event date</Label>
+          <Label htmlFor="eventDate">Start date</Label>
           <Input id="eventDate" name="eventDate" type="date" required />
+        </div>
+        <div>
+          <Label htmlFor="endDate">End date (optional)</Label>
+          <Input id="endDate" name="endDate" type="date" />
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="venue">Venue (optional)</Label>

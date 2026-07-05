@@ -124,7 +124,7 @@ function InvoiceDocument({ data }: { data: InvoicePdfData }) {
             <Text style={styles.bold}>{inr(data.totalAmount)}</Text>
           </View>
           <View style={styles.row}>
-            <Text>Advance received</Text>
+            <Text>Paid</Text>
             <Text style={styles.bold}>− {inr(data.advancePaid)}</Text>
           </View>
           <View style={styles.dueRow}>

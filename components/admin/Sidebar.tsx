@@ -27,7 +27,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex w-full shrink-0 flex-col border-b border-line bg-cream md:h-screen md:w-64 md:border-b-0 md:border-r">
+    <aside className="flex w-full shrink-0 flex-col border-b border-line bg-cream md:sticky md:top-0 md:h-screen md:w-64 md:self-start md:border-b-0 md:border-r">
       <div className="px-6 py-5">
         <Link href="/admin/dashboard" className="font-display text-xl text-espresso">
           Sanctified Studio

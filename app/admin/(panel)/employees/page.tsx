@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
 import { PageHeader, EmptyState } from "@/components/admin/PageHeader";
@@ -59,7 +60,12 @@ export default async function EmployeesPage() {
                         {e.displayId}
                       </TD>
                       <TD>
-                        <div className="font-medium text-espresso">{e.name}</div>
+                        <Link
+                          href={`/admin/employees/${e.id}`}
+                          className="font-medium text-espresso hover:underline"
+                        >
+                          {e.name}
+                        </Link>
                         <div className="text-xs text-muted">{e.email}</div>
                       </TD>
                       <TD className="text-muted">{e.role}</TD>

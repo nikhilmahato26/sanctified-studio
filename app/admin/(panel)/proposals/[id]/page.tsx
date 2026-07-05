@@ -9,7 +9,7 @@ import {
   ProposalStatusBadge,
 } from "@/components/admin/StatusBadge";
 import { ProposalEditor } from "@/components/admin/ProposalEditor";
-import { parseLineItems } from "@/lib/pdf/types";
+import { parseTimeline, parseStringList } from "@/lib/pdf/types";
 import { formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -63,12 +63,15 @@ export default async function ProposalPage({
 
       <Card>
         <CardHeader>
-          <CardTitle>Price page</CardTitle>
+          <CardTitle>Proposal builder</CardTitle>
         </CardHeader>
         <CardContent>
           <ProposalEditor
             proposalId={proposal.id}
-            initialItems={parseLineItems(proposal.lineItems)}
+            initialTimeline={parseTimeline(proposal.timeline)}
+            initialDeliverables={parseStringList(proposal.deliverables)}
+            initialTerms={parseStringList(proposal.terms)}
+            initialTotal={proposal.total}
             initialNotes={proposal.notes ?? ""}
             status={proposal.status}
           />
