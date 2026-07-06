@@ -10,7 +10,7 @@ const buttonVariants = cva(
       variant: {
         primary:
           "bg-espresso text-cream hover:bg-espresso/90",
-        sage: "bg-sage text-espresso hover:bg-sage/85",
+        sage: "bg-sage text-cream hover:bg-sage/90",
         blush: "bg-blush text-espresso hover:bg-blush/85",
         outline:
           "border border-espresso/20 bg-transparent text-espresso hover:bg-espresso/5",

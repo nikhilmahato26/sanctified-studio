@@ -16,7 +16,7 @@ export function EnquiryBand() {
             Tell us about your day and we&apos;ll put together something just for
             you.
           </p>
-          <Button asChild size="lg" variant="sage" className="mt-8">
+          <Button asChild size="lg" variant="blush" className="mt-8">
             <Link href="/contact">Start an enquiry</Link>
           </Button>
           <div className="mt-8 flex justify-center gap-4">

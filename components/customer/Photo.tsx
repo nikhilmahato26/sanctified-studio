@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 type Tone = "sand" | "blush" | "sage" | "clay" | "cream";
 
 const toneGradient: Record<Tone, string> = {
-  sand: "from-sand to-[#d8cab4]",
-  blush: "from-blush to-[#d9b3ab]",
-  sage: "from-sage to-[#7f8d72]",
-  clay: "from-clay to-[#8a6f57]",
+  sand: "from-sand to-[#d4b8ab]",
+  blush: "from-blush to-[#c08e94]",
+  sage: "from-sage to-[#4e0911]",
+  clay: "from-clay to-[#6e454b]",
   cream: "from-cream to-sand",
 };
 

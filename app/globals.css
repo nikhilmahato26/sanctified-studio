@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand palette — warm editorial beige */
-  --color-sand: #e9e0d4; /* hero / section backgrounds */
-  --color-cream: #f7f3ed; /* page base, cards */
-  --color-clay: #a1846b; /* footer block, accents */
-  --color-espresso: #3a322b; /* headings, body text */
-  --color-blush: #e4c9c2; /* baby shower accent */
-  --color-sage: #9ca88f; /* wedding accent */
+  /* Brand palette — maroon */
+  --color-sand: #e4cec2; /* hero / section backgrounds (warm beige) */
+  --color-cream: #faf1ec; /* page base, cards */
+  --color-clay: #905f66; /* mid accent (mauve), footer block */
+  --color-espresso: #4e0911; /* headings, body text, dark bands (maroon) */
+  --color-blush: #d3a9ad; /* baby shower accent (dusty rose) */
+  --color-sage: #7a2531; /* wedding accent (wine) */
 
   /* Semantic aliases */
-  --color-background: #f7f3ed;
-  --color-foreground: #3a322b;
-  --color-muted: #8a7e70;
-  --color-line: #e3d9cb;
+  --color-background: #faf1ec;
+  --color-foreground: #4e0911;
+  --color-muted: #8a5f63; /* secondary text (muted mauve) */
+  --color-line: #e6d6ce; /* borders */
 
   /* Fonts (wired to next/font CSS variables in layout.tsx) */
   --font-display: var(--font-fraunces), Georgia, serif;
@@ -24,8 +24,23 @@
 }
 
 :root {
-  --background: #f7f3ed;
-  --foreground: #3a322b;
+  --background: #faf1ec;
+  --foreground: #4e0911;
+}
+
+/* Brand splash — logo reveal on first load */
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-splash-in {
+  animation: splash-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 html {

@@ -18,13 +18,18 @@ export function Hero() {
             Sanctified Studio captures the quiet, in-between moments — warm,
             unhurried, and true to you.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 space-y-3">
             <Button asChild size="lg">
               <Link href="/contact">Start an enquiry</Link>
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/weddings">View work</Link>
-            </Button>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild size="lg" variant="sage">
+                <Link href="/weddings">Weddings</Link>
+              </Button>
+              <Button asChild size="lg" variant="blush">
+                <Link href="/baby-showers">Baby showers</Link>
+              </Button>
+            </div>
           </div>
         </Reveal>
 

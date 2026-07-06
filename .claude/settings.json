@@ -15,7 +15,9 @@
       "Bash(npx tsx *)",
       "Bash(node --conditions=react-server --import tsx \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/render-test.ts\")",
       "Bash(node --import tsx --loader \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/stub-loader.mjs\" \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/render-test.ts\")",
-      "Bash(node --require \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/preload.cjs\" --import tsx \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/render-test.ts\")"
+      "Bash(node --require \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/preload.cjs\" --import tsx \"/private/tmp/claude-501/-Users-nikhil-Downloads-priority-clients-sanctified-studio/c94884f3-ea66-4ea6-a886-855714479f2c/scratchpad/render-test.ts\")",
+      "Bash(ls \"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" \"/Applications/Chromium.app/Contents/MacOS/Chromium\" \"/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge\" 2>/dev/null; echo \"done\")",
+      "Read(//Applications/Google Chrome.app/Contents/MacOS/**)"
     ]
   }
 }
