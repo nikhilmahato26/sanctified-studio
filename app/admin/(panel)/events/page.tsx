@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { PageHeader, EmptyState } from "@/components/admin/PageHeader";
 import {
   EventStatusBadge,
@@ -17,7 +17,7 @@ import { formatDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function EventsPage() {
-  await requireAdmin();
+  await requirePermission("events");
 
   const events = await prisma.event.findMany({
     orderBy: { eventDate: "asc" },

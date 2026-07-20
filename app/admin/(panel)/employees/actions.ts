@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
 import { nextEmployeeDisplayId } from "@/lib/ids";
 import { requireAdmin } from "@/lib/session";
 
@@ -13,6 +14,7 @@ const schema = z.object({
   phone: z.string().min(1, "Phone is required"),
   email: z.string().email("Valid email required"),
   role: z.string().min(1, "Role is required"),
+  password: z.string().optional(),
 });
 
 export async function createEmployee(
@@ -25,6 +27,12 @@ export async function createEmployee(
     return { error: parsed.error.issues[0]?.message ?? "Invalid input." };
   }
   const d = parsed.data;
+  const permissions = formData.getAll("permissions") as string[];
+
+  let hashedPassword = null;
+  if (d.password) {
+    hashedPassword = await bcrypt.hash(d.password, 10);
+  }
 
   await prisma.$transaction(async (tx) => {
     const displayId = await nextEmployeeDisplayId(tx);
@@ -35,6 +43,8 @@ export async function createEmployee(
         phone: d.phone,
         email: d.email,
         role: d.role,
+        password: hashedPassword,
+        permissions,
       },
     });
   });

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { sendMail } from "@/lib/mailer";
 import { renderInvoicePdf } from "@/lib/pdf/invoice";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -12,7 +12,7 @@ export type ActionState = { error?: string; ok?: boolean };
 
 /** Create or refresh an invoice from the event's proposal + all payments. */
 export async function createInvoice(eventId: string): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("finance");
 
   const event = await prisma.event.findUnique({
     where: { id: eventId },
@@ -39,7 +39,7 @@ export async function createInvoice(eventId: string): Promise<ActionState> {
 }
 
 export async function sendInvoice(invoiceId: string): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("finance");
 
   const invoice = await prisma.invoice.findUnique({
     where: { id: invoiceId },

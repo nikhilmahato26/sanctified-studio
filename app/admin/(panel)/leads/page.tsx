@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { PageHeader, EmptyState } from "@/components/admin/PageHeader";
 import { ClientStatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ import { formatDate } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 
 export default async function LeadsPage() {
-  await requireAdmin();
+  await requirePermission("clients");
 
   const clients = await prisma.client.findMany({
     orderBy: { createdAt: "desc" },

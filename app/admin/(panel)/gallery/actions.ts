@@ -6,7 +6,7 @@ import {
   isCloudinaryConfigured,
   galleryFolder,
 } from "@/lib/cloudinary";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
 export type ActionState = { error?: string; ok?: boolean };
@@ -19,7 +19,7 @@ export async function uploadGalleryImage(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("gallery");
   if (!isCloudinaryConfigured) {
     return { error: "Cloudinary is not configured." };
   }
@@ -57,7 +57,7 @@ export async function deleteGalleryImage(
   publicId: string,
   type: GalleryType,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("gallery");
   if (!isCloudinaryConfigured) return { error: "Cloudinary is not configured." };
 
   try {
@@ -77,7 +77,7 @@ export async function addYoutubeLink(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("gallery");
   if (!TYPES.includes(type)) return { error: "Invalid gallery." };
 
   const url = formData.get("url");
@@ -107,7 +107,7 @@ export async function deleteYoutubeLink(
   id: string,
   type: GalleryType,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("gallery");
 
   try {
     await prisma.youtubeLink.delete({

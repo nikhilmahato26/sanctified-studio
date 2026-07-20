@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { getFinance } from "@/lib/finance";
 import { PageHeader, EmptyState } from "@/components/admin/PageHeader";
 import { FinanceFilter } from "@/components/admin/FinanceFilter";
@@ -41,7 +41,7 @@ export default async function FinancePage({
 }: {
   searchParams: Promise<{ month?: string; year?: string }>;
 }) {
-  await requireAdmin();
+  await requirePermission("finance");
   const sp = await searchParams;
   const now = new Date();
   const month = Number(sp.month) || now.getMonth() + 1;

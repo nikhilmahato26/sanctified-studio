@@ -45,6 +45,8 @@ model Employee {
   name        String
   phone       String
   email       String
+  password    String?
+  permissions String[]          @default([])
   role        String // photographer, editor, assistant...
   createdAt   DateTime          @default(now())
   assignments EventAssignment[]

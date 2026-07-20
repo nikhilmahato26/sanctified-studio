@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { nextClientDisplayId } from "@/lib/ids";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 
 const CLIENT_STATUSES = [
   "LEAD",
@@ -30,7 +30,7 @@ export async function createClient(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("clients");
 
   const parsed = createSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
@@ -59,7 +59,7 @@ export async function createClient(
 }
 
 export async function updateClientStatus(id: string, status: string) {
-  await requireAdmin();
+  await requirePermission("clients");
   if (!CLIENT_STATUSES.includes(status as (typeof CLIENT_STATUSES)[number])) {
     throw new Error("Invalid status");
   }
@@ -85,7 +85,7 @@ export async function updateClient(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("clients");
   const parsed = updateSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input." };

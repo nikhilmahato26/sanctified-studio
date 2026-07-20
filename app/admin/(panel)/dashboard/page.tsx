@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requireAuth } from "@/lib/session";
 import { Card, CardContent } from "@/components/ui/card";
 import { ClientStatusBadge } from "@/components/admin/StatusBadge";
 import { EmptyState } from "@/components/admin/PageHeader";
@@ -20,7 +20,7 @@ function StatCard({ label, value }: { label: string; value: number | string }) {
 }
 
 export default async function DashboardPage() {
-  const user = await requireAdmin();
+  const user = await requireAuth();
 
   const [leads, openClients, upcoming, recent] = await Promise.all([
     prisma.client.count({ where: { status: "LEAD" } }),

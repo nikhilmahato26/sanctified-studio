@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { EventForm } from "@/components/admin/EventForm";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +14,7 @@ export default async function NewEventPage({
 }: {
   searchParams: Promise<{ clientId?: string }>;
 }) {
-  await requireAdmin();
+  await requirePermission("events");
   const { clientId } = await searchParams;
 
   let fixedClient = undefined;

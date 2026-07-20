@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 
 export type ActionState = { error?: string; ok?: boolean };
 
@@ -17,7 +17,7 @@ export async function assignEmployee(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("events");
   const parsed = assignSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input." };
@@ -52,7 +52,7 @@ export async function assignEmployee(
 }
 
 export async function togglePayoutPaid(payoutId: string, eventId: string) {
-  await requireAdmin();
+  await requirePermission("events");
   const payout = await prisma.payout.findUnique({ where: { id: payoutId } });
   if (!payout) throw new Error("Payout not found");
 
@@ -70,7 +70,7 @@ export async function togglePayoutPaid(payoutId: string, eventId: string) {
 }
 
 export async function removeAssignment(assignmentId: string, eventId: string) {
-  await requireAdmin();
+  await requirePermission("events");
   const [, assignment] = await prisma.$transaction([
     prisma.payout.deleteMany({ where: { assignmentId } }),
     prisma.eventAssignment.delete({ where: { id: assignmentId } }),

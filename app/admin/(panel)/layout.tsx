@@ -12,7 +12,7 @@ export default async function PanelLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-cream md:flex-row">
-      <Sidebar />
+      <Sidebar user={session.user as any} />
       <main className="flex-1 overflow-x-hidden">
         <div className="mx-auto max-w-6xl px-5 py-8 md:px-8">{children}</div>
       </main>

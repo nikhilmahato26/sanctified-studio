@@ -8,6 +8,22 @@ import { auth } from "@/lib/auth";
  */
 export async function requireAdmin() {
   const session = await auth();
+  if (!session?.user || session.user.role !== "ADMIN") redirect("/admin/login");
+  return session.user;
+}
+
+export async function requireAuth() {
+  const session = await auth();
   if (!session?.user) redirect("/admin/login");
+  return session.user;
+}
+
+export async function requirePermission(permission: string) {
+  const session = await auth();
+  if (!session?.user) redirect("/admin/login");
+  if (session.user.role === "ADMIN") return session.user;
+  if (!session.user.permissions?.includes(permission)) {
+    redirect("/admin/dashboard");
+  }
   return session.user;
 }

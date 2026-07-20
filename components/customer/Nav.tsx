@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -25,10 +26,16 @@ export function Nav() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
         <Link
           href="/"
-          className="font-display text-xl tracking-tight text-espresso"
+          className="flex items-center"
           onClick={() => setOpen(false)}
         >
-          Sanctified Studio
+          <Image 
+            src="/logo.png" 
+            alt="Sanctified Studio" 
+            width={140} 
+            height={40} 
+            className="h-10 w-auto object-contain"
+          />
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">

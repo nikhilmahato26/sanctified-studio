@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 
 export type ActionState = { error?: string; ok?: boolean };
 
@@ -25,7 +25,7 @@ export async function createEvent(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("events");
   const parsed = createSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input." };
@@ -48,7 +48,7 @@ export async function createEvent(
 }
 
 export async function updateEventStatus(id: string, status: string) {
-  await requireAdmin();
+  await requirePermission("events");
   if (!["UPCOMING", "COMPLETED", "CANCELLED"].includes(status)) {
     throw new Error("Invalid status");
   }
@@ -81,7 +81,7 @@ export async function recordPayment(
   _prev: ActionState,
   formData: FormData,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("events");
   const parsed = paymentSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input." };

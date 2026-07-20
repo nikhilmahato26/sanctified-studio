@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { isCloudinaryConfigured } from "@/lib/cloudinary";
 import { getGalleryImages } from "@/lib/gallery";
 import { PageHeader } from "@/components/admin/PageHeader";
@@ -9,7 +9,7 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export default async function GalleryPage() {
-  await requireAdmin();
+  await requirePermission("gallery");
 
   const [wedding, baby, youtubeLinks] = await Promise.all([
     getGalleryImages("wedding", 60),

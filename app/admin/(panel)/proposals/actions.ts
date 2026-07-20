@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/session";
+import { requirePermission } from "@/lib/session";
 import { sendMail } from "@/lib/mailer";
 import { renderProposalPdf } from "@/lib/pdf/proposal";
 import {
@@ -48,7 +48,7 @@ const DEFAULT_TERMS = [
 ];
 
 export async function createProposal(eventId: string) {
-  await requireAdmin();
+  await requirePermission("finance");
   const event = await prisma.event.findUnique({
     where: { id: eventId },
     include: { proposal: true },
@@ -78,7 +78,7 @@ export async function updateProposal(
   proposalId: string,
   draft: ProposalDraft,
 ): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("finance");
 
   const timeline = draft.timeline
     .map((t) => ({
@@ -112,7 +112,7 @@ export async function updateProposal(
 }
 
 export async function sendProposal(proposalId: string): Promise<ActionState> {
-  await requireAdmin();
+  await requirePermission("finance");
 
   const proposal = await prisma.proposal.findUnique({
     where: { id: proposalId },

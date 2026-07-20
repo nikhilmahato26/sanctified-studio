@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
 import { InstagramIcon, YoutubeIcon } from "@/components/customer/SocialIcons";
 
@@ -7,9 +8,15 @@ export function Footer() {
   return (
     <footer className="mt-24 bg-clay text-cream">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="lg:col-span-2">
-          <p className="font-display text-2xl">Sanctified Studio</p>
-          <p className="mt-3 max-w-sm text-sm text-cream/80">
+        <div className="flex flex-col gap-4">
+          <Image 
+            src="/logo.png" 
+            alt="Sanctified Studio" 
+            width={180} 
+            height={50} 
+            className="h-12 w-auto object-contain"
+          />
+          <p className="max-w-xs text-sm text-cream/80">
             We commemorate every moment of your joyous ceremonies, preserving them indefinitely.
           </p>
         </div>

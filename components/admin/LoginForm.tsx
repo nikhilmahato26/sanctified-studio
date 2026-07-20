@@ -15,14 +15,14 @@ export function LoginForm() {
   return (
     <form action={formAction} className="space-y-5">
       <div>
-        <Label htmlFor="email">Email</Label>
+        <Label htmlFor="email">Email or Employee ID</Label>
         <Input
           id="email"
           name="email"
-          type="email"
+          type="text"
           autoComplete="email"
           required
-          placeholder="admin@sanctifiedstudio.com"
+          placeholder="admin@sanctifiedstudio.com or EMP-0001"
         />
       </div>
       <div>

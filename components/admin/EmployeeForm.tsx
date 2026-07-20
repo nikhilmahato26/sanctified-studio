@@ -39,6 +39,33 @@ export function EmployeeForm() {
           <Label htmlFor="email">Email</Label>
           <Input id="email" name="email" type="email" required />
         </div>
+        <div>
+          <Label htmlFor="password">Login Password (Optional)</Label>
+          <Input id="password" name="password" type="password" placeholder="Leave blank if no login needed" />
+        </div>
+      </div>
+
+      <div className="space-y-2 pt-4">
+        <Label>System Permissions</Label>
+        <div className="flex flex-wrap gap-4">
+          {[
+            { id: "clients", label: "Clients" },
+            { id: "events", label: "Events" },
+            { id: "finance", label: "Finance" },
+            { id: "gallery", label: "Gallery" },
+          ].map((p) => (
+            <label key={p.id} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                name="permissions"
+                value={p.id}
+                className="rounded border-line text-espresso focus:ring-espresso"
+              />
+              {p.label}
+            </label>
+          ))}
+        </div>
+        <p className="text-xs text-muted">Check the sections this employee is allowed to access.</p>
       </div>
 
       {state.error && <p className="text-sm text-red-700">{state.error}</p>}

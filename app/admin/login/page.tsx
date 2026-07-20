@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import Image from "next/image";
 import { auth } from "@/lib/auth";
 import { LoginForm } from "@/components/admin/LoginForm";
 
@@ -16,11 +17,16 @@ export default async function AdminLoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-sand px-5">
       <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <Link href="/" className="font-display text-2xl text-espresso">
-            Sanctified Studio
+        <div className="mb-8 text-center flex justify-center">
+          <Link href="/">
+            <Image 
+              src="/logo.png" 
+              alt="Sanctified Studio" 
+              width={220} 
+              height={70} 
+              className="h-16 w-auto object-contain"
+            />
           </Link>
-          <p className="mt-2 text-sm text-muted">Admin panel</p>
         </div>
         <div className="rounded-2xl border border-line bg-white/80 p-7 shadow-sm">
           <LoginForm />
