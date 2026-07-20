@@ -1,9 +1,10 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { renderProposalPdf } from "@/lib/pdf/proposal";
+import { appendDesignedPages } from "@/lib/pdf/append";
 import { parseTimeline, parseStringList } from "@/lib/pdf/types";
 import { formatDate, formatDateRange } from "@/lib/utils";
-import { EVENT_TYPE } from "@/lib/status";
+
 
 export const runtime = "nodejs";
 
@@ -28,7 +29,7 @@ export async function GET(
     proposalNumber: id.slice(-6).toUpperCase(),
     clientName: event.client.name,
     clientEmail: event.client.email,
-    eventType: EVENT_TYPE[event.type].label,
+    eventType: event.type,
     eventKind: event.type,
     eventDate: formatDateRange(event.eventDate, event.endDate),
     venue: event.venue,
@@ -40,7 +41,10 @@ export async function GET(
     date: formatDate(new Date()),
   });
 
-  return new Response(new Uint8Array(pdf), {
+  // Append the hand-designed closing page for this event type, if one exists.
+  const finalPdf = await appendDesignedPages(pdf, event.type);
+
+  return new Response(new Uint8Array(finalPdf), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `inline; filename="proposal-${id.slice(-6)}.pdf"`,

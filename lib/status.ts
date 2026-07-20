@@ -1,7 +1,6 @@
 import type {
   ClientStatus,
   EventStatus,
-  EventType,
   ProposalStatus,
   PaymentType,
 } from "@prisma/client";
@@ -42,11 +41,6 @@ export const PROPOSAL_STATUS: Record<
   DRAFT: { label: "Draft", tone: "neutral" },
   SENT: { label: "Sent", tone: "amber" },
   ACCEPTED: { label: "Accepted", tone: "green" },
-};
-
-export const EVENT_TYPE: Record<EventType, { label: string; tone: Tone }> = {
-  WEDDING: { label: "Wedding", tone: "sage" },
-  BABY_SHOWER: { label: "Baby shower", tone: "blush" },
 };
 
 export const PAYMENT_TYPE: Record<PaymentType, { label: string }> = {

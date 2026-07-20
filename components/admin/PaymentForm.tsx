@@ -36,7 +36,7 @@ export function PaymentForm({ eventId }: { eventId: string }) {
         className="w-36"
       />
       <Button type="submit" size="sm" disabled={pending}>
-        {pending ? "Saving…" : "Record"}
+        {pending ? "Saving…" : "Received"}
       </Button>
       {state.error && (
         <p className="w-full text-sm text-red-700">{state.error}</p>

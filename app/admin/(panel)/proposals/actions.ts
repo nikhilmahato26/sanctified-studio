@@ -13,7 +13,7 @@ import {
   type TimelineItem,
 } from "@/lib/pdf/types";
 import { formatDate, formatDateRange, toDateInput } from "@/lib/utils";
-import { EVENT_TYPE } from "@/lib/status";
+
 
 export type ActionState = { error?: string; ok?: boolean };
 
@@ -129,7 +129,7 @@ export async function sendProposal(proposalId: string): Promise<ActionState> {
       proposalNumber: proposalId.slice(-6).toUpperCase(),
       clientName: client.name,
       clientEmail: client.email,
-      eventType: EVENT_TYPE[event.type].label,
+      eventType: event.type,
       eventKind: event.type,
       eventDate: formatDateRange(event.eventDate, event.endDate),
       venue: event.venue,
@@ -150,7 +150,7 @@ export async function sendProposal(proposalId: string): Promise<ActionState> {
       to: client.email,
       subject: "Your photography proposal · Sanctified Studio",
       html: `<p>Hi ${client.name},</p>
-        <p>Thank you for considering Sanctified Studio for your ${EVENT_TYPE[event.type].label.toLowerCase()}.
+        <p>Thank you for considering Sanctified Studio for your ${event.type.toLowerCase()}.
         Please find your proposal attached.</p>
         <p>Warmly,<br/>Sanctified Studio</p>`,
       attachments: [

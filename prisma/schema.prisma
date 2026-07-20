@@ -55,7 +55,7 @@ model Event {
   id          String            @id @default(cuid())
   clientId    String
   client      Client            @relation(fields: [clientId], references: [id])
-  type        EventType
+  type        String
   eventDate   DateTime // start date
   endDate     DateTime? // end date for multi-day events
   venue       String?
@@ -67,9 +67,10 @@ model Event {
   invoice     Invoice?
 }
 
-enum EventType {
-  WEDDING
-  BABY_SHOWER
+model EventCategory {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
 }
 
 enum EventStatus {
@@ -144,3 +145,11 @@ model Invoice {
   sentAt      DateTime?
   createdAt   DateTime  @default(now())
 }
+
+model YoutubeLink {
+  id        String   @id @default(cuid())
+  category  String   // "wedding" or "baby-shower"
+  url       String
+  createdAt DateTime @default(now())
+}
+

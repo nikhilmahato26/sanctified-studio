@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ["@react-pdf/renderer"],
+  // Ensure hand-designed proposal closing pages are bundled for the PDF route.
+  outputFileTracingIncludes: {
+    "/api/proposals/[id]/pdf": ["./assets/proposal-pages/**/*"],
+  },
 };
 
 export default nextConfig;

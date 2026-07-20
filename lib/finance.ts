@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { EVENT_TYPE } from "@/lib/status";
+
 import { formatDate } from "@/lib/utils";
 
 export interface FinanceQuery {
@@ -77,10 +77,10 @@ export async function getFinance({
   >();
   function labelFor(event: {
     client: { name: string };
-    type: keyof typeof EVENT_TYPE;
+    type: string;
     eventDate: Date;
   }) {
-    return `${event.client.name} · ${EVENT_TYPE[event.type].label} · ${formatDate(
+    return `${event.client.name} · ${event.type} · ${formatDate(
       event.eventDate,
     )}`;
   }

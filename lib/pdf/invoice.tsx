@@ -134,7 +134,7 @@ function InvoiceDocument({ data }: { data: InvoicePdfData }) {
         </View>
 
         <Text style={styles.footer}>
-          Sanctified Studio · hello@sanctifiedstudio.com · Thank you.
+          Sanctified Studio · sanctifiedstudiojbp@gmail.com · Thank you.
         </Text>
       </Page>
     </Document>

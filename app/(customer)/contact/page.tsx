@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Mail, Phone, MapPin } from "lucide-react";
+import { prisma } from "@/lib/prisma";
 import { EnquiryForm } from "@/components/customer/EnquiryForm";
 import { Reveal } from "@/components/customer/Reveal";
 
@@ -8,7 +9,11 @@ export const metadata: Metadata = {
   description: "Start an enquiry with Sanctified Studio.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const categories = await prisma.eventCategory.findMany({
+    orderBy: { createdAt: "asc" },
+  });
+
   return (
     <section className="mx-auto max-w-6xl px-5 py-20">
       <div className="grid gap-12 md:grid-cols-2">
@@ -29,15 +34,15 @@ export default function ContactPage() {
               <span className="rounded-full bg-sand p-2.5">
                 <Mail className="size-4" />
               </span>
-              <a href="mailto:hello@sanctifiedstudio.com" className="hover:underline">
-                hello@sanctifiedstudio.com
+              <a href="mailto:sanctifiedstudiojbp@gmail.com" className="hover:underline">
+                sanctifiedstudiojbp@gmail.com
               </a>
             </li>
             <li className="flex items-center gap-3">
               <span className="rounded-full bg-sand p-2.5">
                 <Phone className="size-4" />
               </span>
-              +91 90000 00000
+              +91 98274 11116
             </li>
             <li className="flex items-center gap-3">
               <span className="rounded-full bg-sand p-2.5">
@@ -49,7 +54,9 @@ export default function ContactPage() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <EnquiryForm />
+          <div className="lg:pl-8">
+            <EnquiryForm categories={categories} />
+          </div>
         </Reveal>
       </div>
     </section>

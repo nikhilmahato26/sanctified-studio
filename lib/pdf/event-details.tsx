@@ -10,7 +10,7 @@ import { Page, Text, View, StyleSheet } from "@react-pdf/renderer";
  * PDF — we can merge it in with pdf-lib instead of rendering these pages.
  */
 
-export type EventKind = "WEDDING" | "BABY_SHOWER";
+export type EventKind = string;
 
 const COLORS = {
   espresso: "#3A322B",
@@ -89,7 +89,7 @@ interface DetailPage {
   sections?: DetailSection[];
 }
 
-const DETAIL_CONTENT: Record<EventKind, { accent: string; pages: DetailPage[] }> = {
+const DETAIL_CONTENT: Record<string, { accent: string; pages: DetailPage[] }> = {
   WEDDING: {
     accent: COLORS.sage,
     pages: [
@@ -154,14 +154,14 @@ const DETAIL_CONTENT: Record<EventKind, { accent: string; pages: DetailPage[] }>
     pages: [
       {
         cover: true,
-        kicker: "Baby Shower Photography",
+        kicker: "Maternity Photography",
         title: "A tender\nmilestone, held.",
         intro:
           "Soft, joyful frames of the people and the little details around a new beginning. Here is how we would capture your celebration.",
       },
       {
         kicker: "Our approach",
-        title: "How we photograph a baby shower",
+        title: "How we photograph a maternity session",
         intro:
           "Relaxed and unhurried — we follow the warmth of the room and let the celebration lead the way.",
         sections: [
@@ -213,7 +213,7 @@ const DETAIL_CONTENT: Record<EventKind, { accent: string; pages: DetailPage[] }>
 function Footer() {
   return (
     <Text style={styles.footer} fixed>
-      Sanctified Studio · hello@sanctifiedstudio.com · Moments worth keeping.
+      Sanctified Studio · sanctifiedstudiojbp@gmail.com · Moments worth keeping.
     </Text>
   );
 }

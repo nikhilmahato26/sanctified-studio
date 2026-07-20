@@ -2,9 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { GalleryGrid } from "@/components/customer/GalleryGrid";
-import { PackageList } from "@/components/customer/PackageList";
 import { Reveal } from "@/components/customer/Reveal";
-import { weddingPackages } from "@/lib/packages";
 import { getGalleryImages } from "@/lib/gallery";
 
 export const metadata: Metadata = {
@@ -28,11 +26,10 @@ export default async function WeddingsPage() {
               Wedding photography
             </p>
             <h1 className="mt-4 max-w-2xl font-display text-6xl leading-[1.05] text-espresso">
-              The whole day, gently kept.
+              Framing Emotions. Celebrating Forever.
             </h1>
             <p className="mt-6 max-w-xl text-lg text-muted">
-              We move quietly through the day, photographing the looks, the
-              laughter and the in-between moments you&apos;ll want to hold onto.
+              From the initial freezing process to the final delivery, we manage every step with the utmost care, as if it were our own. We share in our clients' successes and empathize with their challenges, which is why we consider ourselves an integral part of their extended family.
             </p>
           </Reveal>
         </div>
@@ -42,12 +39,6 @@ export default async function WeddingsPage() {
         <GalleryGrid tone="sage" label="Wedding" images={images} />
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 pb-16">
-        <Reveal>
-          <h2 className="mb-8 font-display text-4xl text-espresso">Packages</h2>
-        </Reveal>
-        <PackageList packages={weddingPackages} accent="sage" />
-      </section>
 
       <section className="mx-auto max-w-6xl px-5 pb-24">
         <div className="rounded-2xl bg-sage/25 px-8 py-12 text-center">

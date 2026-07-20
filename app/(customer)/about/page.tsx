@@ -5,21 +5,21 @@ import { Reveal } from "@/components/customer/Reveal";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Sanctified Studio is a small photography studio for weddings and baby showers.",
+    "Sanctified Studio is a small photography studio for weddings and maternity.",
 };
 
 const approach = [
   {
-    title: "Calm on the day",
-    body: "We keep a light footprint so the day stays yours. No long shot-lists, no stiff posing — just gentle direction when it helps.",
+    title: "Wedding Day",
+    body: "Throughout the entire engagement, from our initial meeting to the project's completion, we strive to ensure our clients feel at ease and empowered to communicate openly in all circumstances. Our objective is to deliver innovative and exceptional results.",
   },
   {
-    title: "Honest editing",
-    body: "Warm, true-to-life colour. We edit so the photographs feel like the day actually felt, not like a trend that will date.",
+    title: "The delivery of their cherished memories.",
+    body: "Our editing suite meticulously crafts each scene to achieve a cinematic quality, and through precise photo grading, we uncover the inherent beauty within every image. Our core commitment is to provide the most expeditious data delivery in the industry, enabling all to commemorate their cherished memories.",
   },
   {
-    title: "Care after",
-    body: "Private online galleries, thoughtful albums, and prompt delivery. The work doesn't end when the day does.",
+    title: "The relationship between the client and the team.",
+    body: "We are eager to share these moments on our social media platforms, as they authentically showcase our dedication and commitment to their weddings. We consistently strive to maintain strong connections with our valued clients, fostering an environment where they feel comfortable reaching out to us repeatedly.",
   },
 ];
 
@@ -33,7 +33,7 @@ export default function AboutPage() {
               Our story
             </p>
             <h1 className="mt-4 max-w-3xl font-display text-6xl leading-[1.05] text-espresso">
-              A studio built around two tender occasions.
+              Our vision is to capture each moment with the wonder of cherished memories.
             </h1>
           </Reveal>
         </div>
@@ -46,12 +46,12 @@ export default function AboutPage() {
         <Reveal delay={0.1}>
           <div className="space-y-5 text-lg text-muted">
             <p>
-              Sanctified Studio began with a simple belief: the most meaningful
-              photographs are the ones that feel like a memory, not a
-              performance.
+              Our vision originated from a dedicated space where the concept of creating a vibrant environment, allowing individuals to entrust their cherished life moments to the safest hands, was conceived. Our founder, Mr. Swapnil Pawar, possesses the remarkable ability to navigate every situation with composure and a positive demeanor. His innovative mindset consistently produces exceptional results, even in challenging circumstances. We firmly believe that every moment holds significance and should be treated with the utmost care, ensuring that we deliver our best without compromising authenticity. We excel in crafting compelling pre-wedding narratives and conceptual shoots.
+
+Our Co-founder, Mrs. Sardhana, is an extraordinary individual who oversees our Baby Studio and Maternity services. She infuses her maternal touch into every aspect, ensuring that every baby feels comfortable within the environment she meticulously creates. Her artistic talent consistently transforms each setup into a magical experience, contribute
             </p>
             <p>
-              We chose to focus on weddings and baby showers because they share
+              We chose to focus on weddings and maternity because they share
               something rare — a room full of people who love each other, fully
               present. Our job is to notice, and to keep it.
             </p>
@@ -67,7 +67,7 @@ export default function AboutPage() {
         <div className="mx-auto max-w-6xl px-5 py-20">
           <Reveal>
             <h2 className="mb-10 font-display text-4xl text-espresso">
-              How we work
+              How we proceed
             </h2>
           </Reveal>
           <div className="grid gap-6 md:grid-cols-3">

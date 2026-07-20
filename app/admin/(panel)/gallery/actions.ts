@@ -7,6 +7,7 @@ import {
   galleryFolder,
 } from "@/lib/cloudinary";
 import { requireAdmin } from "@/lib/session";
+import { prisma } from "@/lib/prisma";
 
 export type ActionState = { error?: string; ok?: boolean };
 
@@ -68,5 +69,57 @@ export async function deleteGalleryImage(
 
   revalidatePath("/admin/gallery");
   revalidatePath(type === "wedding" ? "/weddings" : "/baby-showers");
+  return { ok: true };
+}
+
+export async function addYoutubeLink(
+  type: GalleryType,
+  _prev: ActionState,
+  formData: FormData,
+): Promise<ActionState> {
+  await requireAdmin();
+  if (!TYPES.includes(type)) return { error: "Invalid gallery." };
+
+  const url = formData.get("url");
+  if (typeof url !== "string" || !url.trim()) {
+    return { error: "Please enter a valid YouTube link." };
+  }
+
+  try {
+    await prisma.youtubeLink.create({
+      data: {
+        category: type,
+        url: url.trim(),
+      },
+    });
+  } catch (err) {
+    console.error("Failed to add youtube link:", err);
+    return { error: "Failed to save the link. Please try again." };
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath(type === "wedding" ? "/weddings" : "/maternity");
+  revalidatePath("/gallery");
+  return { ok: true };
+}
+
+export async function deleteYoutubeLink(
+  id: string,
+  type: GalleryType,
+): Promise<ActionState> {
+  await requireAdmin();
+
+  try {
+    await prisma.youtubeLink.delete({
+      where: { id },
+    });
+  } catch (err) {
+    console.error("Failed to delete youtube link:", err);
+    return { error: "Could not delete the link." };
+  }
+
+  revalidatePath("/admin/gallery");
+  revalidatePath(type === "wedding" ? "/weddings" : "/maternity");
+  revalidatePath("/gallery");
   return { ok: true };
 }

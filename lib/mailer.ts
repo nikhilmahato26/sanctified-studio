@@ -6,7 +6,7 @@ const user = process.env.SMTP_USER;
 const pass = process.env.SMTP_PASS;
 
 export const MAIL_FROM =
-  process.env.SMTP_FROM ?? "Sanctified Studio <hello@sanctifiedstudio.com>";
+  process.env.SMTP_FROM ?? "Sanctified Studio <sanctifiedstudiojbp@gmail.com>";
 
 /** Returns a configured transporter, or null if SMTP env vars are missing. */
 export function getTransport() {

@@ -57,6 +57,28 @@ async function main() {
     });
   }
   console.log(`✓ Seeded ${demoEmployees.length} demo employees`);
+
+  // Seed Event Categories
+  const categories = [
+    "Wedding",
+    "Maternity",
+    "New born",
+    "Pre-birthday",
+    "Cake smash",
+    "Engagement",
+    "Pre wedding",
+    "Commercial",
+    "Event",
+  ];
+
+  for (const name of categories) {
+    await prisma.eventCategory.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+  console.log(`✓ Seeded ${categories.length} event categories`);
 }
 
 main()

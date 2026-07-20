@@ -18,11 +18,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://sanctifiedstudio.com"),
   title: {
-    default: "Sanctified Studio — Wedding & Baby Shower Photography",
+    default: "Sanctified Studio — Wedding & Maternity Photography",
     template: "%s · Sanctified Studio",
   },
   description:
-    "A photography studio for weddings and baby showers. Moments worth keeping.",
+    "A photography studio for weddings and maternity. Moments worth keeping.",
 };
 
 export default function RootLayout({

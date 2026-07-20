@@ -9,7 +9,7 @@ const schema = z.object({
   name: z.string().min(1, "Name is required"),
   phone: z.string().min(3, "Phone is required"),
   email: z.string().email("A valid email is required"),
-  eventType: z.enum(["WEDDING", "BABY_SHOWER"]).optional(),
+  eventType: z.string().optional(),
   preferredDate: z.string().optional(),
   message: z.string().optional(),
 });
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   // Fold the enquiry's event interest + date into the lead notes for the admin.
   const noteParts: string[] = [];
   if (eventType)
-    noteParts.push(`Interest: ${eventType === "WEDDING" ? "Wedding" : "Baby shower"}`);
+    noteParts.push(`Interest: ${eventType}`);
   if (preferredDate) noteParts.push(`Preferred date: ${preferredDate}`);
   if (message) noteParts.push(message);
   const notes = noteParts.join("\n") || null;

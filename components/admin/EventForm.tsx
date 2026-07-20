@@ -57,7 +57,7 @@ export function EventForm({
           <Label htmlFor="type">Event type</Label>
           <Select id="type" name="type" defaultValue="WEDDING">
             <option value="WEDDING">Wedding</option>
-            <option value="BABY_SHOWER">Baby shower</option>
+            <option value="BABY_SHOWER">Maternity</option>
           </Select>
         </div>
         <div>

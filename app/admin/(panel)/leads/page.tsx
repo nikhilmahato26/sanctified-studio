@@ -64,6 +64,11 @@ export default async function LeadsPage() {
                     >
                       {c.name}
                     </Link>
+                    {c.notes && (
+                      <div className="mt-1 max-w-[250px] whitespace-pre-wrap text-xs text-muted line-clamp-3" title={c.notes}>
+                        {c.notes}
+                      </div>
+                    )}
                   </TD>
                   <TD className="text-muted">
                     <div>{c.phone}</div>

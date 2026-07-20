@@ -24,16 +24,17 @@ export default function HomePage() {
               label="Weddings"
               accent="sage"
               href="/weddings"
-              description="From the first look to the last dance — unhurried coverage of the whole day."
+              description="From Getting Ready to tears of last bye we captured everything"
             />
           </Reveal>
           <Reveal delay={0.08}>
             <ServiceCard
-              title="Baby showers"
-              label="Baby showers"
+              title="Maternity"
+              label="Maternity"
               accent="blush"
-              href="/baby-showers"
-              description="Soft, joyful frames of the people gathering to welcome someone new."
+              href="/maternity"
+              description="Maternity And Baby Shoot 
+From baby bump to the joyful smiles of newborns and toddlers, we capture everything."
             />
           </Reveal>
         </div>

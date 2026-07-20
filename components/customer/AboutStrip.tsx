@@ -19,7 +19,7 @@ export function AboutStrip() {
           </h2>
           <p className="mt-5 text-muted">
             We are a small studio devoted to two of life&apos;s tenderest
-            occasions — weddings and baby showers. We work calmly and closely,
+            occasions — weddings and maternity. We work calmly and closely,
             so the day stays yours and the photographs stay honest.
           </p>
           <Button asChild variant="outline" className="mt-7">

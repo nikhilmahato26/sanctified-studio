@@ -10,7 +10,12 @@ import { Select } from "@/components/ui/select";
 
 const whatsapp = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
-export function EnquiryForm() {
+interface Category {
+  id: string;
+  name: string;
+}
+
+export function EnquiryForm({ categories = [] }: { categories?: Category[] }) {
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">(
     "idle",
   );
@@ -81,7 +86,7 @@ export function EnquiryForm() {
             id="phone"
             name="phone"
             required
-            placeholder="+91 90000 00000"
+            placeholder="+91 98274 11116"
           />
         </div>
         <div>
@@ -96,14 +101,21 @@ export function EnquiryForm() {
         </div>
         <div>
           <Label htmlFor="eventType">Event type</Label>
-          <Select id="eventType" name="eventType" defaultValue="WEDDING">
-            <option value="WEDDING">Wedding</option>
-            <option value="BABY_SHOWER">Baby shower</option>
+          <Select id="eventType" name="eventType" defaultValue={categories[0]?.name || "Wedding"}>
+            {categories.length > 0 ? (
+              categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))
+            ) : (
+              <option value="Wedding">Wedding</option>
+            )}
           </Select>
         </div>
         <div>
-          <Label htmlFor="preferredDate">Preferred date</Label>
-          <Input id="preferredDate" name="preferredDate" type="date" />
+          <Label htmlFor="preferredDate">Preferred date(s)</Label>
+          <Input id="preferredDate" name="preferredDate" type="text" placeholder="DD/MM/YYYY" />
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="message">Message</Label>

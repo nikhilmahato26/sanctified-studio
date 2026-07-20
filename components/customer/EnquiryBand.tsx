@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
-import { InstagramIcon, FacebookIcon } from "@/components/customer/SocialIcons";
+import { InstagramIcon, YoutubeIcon } from "@/components/customer/SocialIcons";
 import { Reveal } from "@/components/customer/Reveal";
 import { Button } from "@/components/ui/button";
 
@@ -19,27 +19,44 @@ export function EnquiryBand() {
           <Button asChild size="lg" variant="blush" className="mt-8">
             <Link href="/contact">Start an enquiry</Link>
           </Button>
-          <div className="mt-8 flex justify-center gap-4">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             <a
-              href="https://instagram.com"
-              aria-label="Instagram"
-              className="rounded-full bg-cream/10 p-2.5 hover:bg-cream/20"
+              href="https://www.instagram.com/sanctified_studios_jbp?igsh=amh1dW5uamM3bWlr"
+              title="Wedding Instagram"
+              className="flex items-center gap-2 rounded-full bg-cream/10 px-4 py-2 text-sm text-cream transition-colors hover:bg-cream/20"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <InstagramIcon className="size-5" />
+              <InstagramIcon className="size-4" />
+              Wedding
             </a>
             <a
-              href="https://facebook.com"
-              aria-label="Facebook"
-              className="rounded-full bg-cream/10 p-2.5 hover:bg-cream/20"
+              href="https://www.instagram.com/sanctified_baby_studio?igsh=YTgyNjNydzM5cmRz"
+              title="Baby & Maternity Instagram"
+              className="flex items-center gap-2 rounded-full bg-cream/10 px-4 py-2 text-sm text-cream transition-colors hover:bg-cream/20"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <FacebookIcon className="size-5" />
+              <InstagramIcon className="size-4" />
+              Baby & Maternity
             </a>
             <a
-              href="mailto:hello@sanctifiedstudio.com"
-              aria-label="Email"
-              className="rounded-full bg-cream/10 p-2.5 hover:bg-cream/20"
+              href="https://youtube.com/@sanctified_studio?si=87tqM_VHcJOSW2UG"
+              title="YouTube"
+              className="flex items-center gap-2 rounded-full bg-cream/10 px-4 py-2 text-sm text-cream transition-colors hover:bg-cream/20"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Mail className="size-5" />
+              <YoutubeIcon className="size-4" />
+              YouTube
+            </a>
+            <a
+              href="mailto:sanctifiedstudiojbp@gmail.com"
+              title="Email"
+              className="flex items-center gap-2 rounded-full bg-cream/10 px-4 py-2 text-sm text-cream transition-colors hover:bg-cream/20"
+            >
+              <Mail className="size-4" />
+              Email
             </a>
           </div>
         </div>

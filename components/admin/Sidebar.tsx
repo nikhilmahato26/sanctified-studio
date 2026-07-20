@@ -10,6 +10,7 @@ import {
   Wallet,
   Image as ImageIcon,
   LogOut,
+  Tags,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/app/admin/actions";
@@ -21,6 +22,7 @@ const items = [
   { href: "/admin/employees", label: "Employees", icon: UserCog },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/admin/finance", label: "Finance", icon: Wallet },
+  { href: "/admin/categories", label: "Categories", icon: Tags },
 ];
 
 export function Sidebar() {

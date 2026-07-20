@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { renderInvoicePdf } from "@/lib/pdf/invoice";
 import { formatDate } from "@/lib/utils";
-import { EVENT_TYPE } from "@/lib/status";
+
 
 export const runtime = "nodejs";
 
@@ -25,7 +25,7 @@ export async function GET(
     invoiceNumber: id.slice(-6).toUpperCase(),
     clientName: event.client.name,
     clientEmail: event.client.email,
-    eventType: EVENT_TYPE[event.type].label,
+    eventType: event.type,
     eventDate: formatDate(event.eventDate),
     totalAmount: invoice.totalAmount,
     advancePaid: invoice.advancePaid,

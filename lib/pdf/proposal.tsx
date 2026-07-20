@@ -8,7 +8,7 @@ import {
   renderToBuffer,
 } from "@react-pdf/renderer";
 import type { TimelineItem } from "@/lib/pdf/types";
-import { EventDetailPages, type EventKind } from "@/lib/pdf/event-details";
+import { EventDetailPages } from "@/lib/pdf/event-details";
 import { formatDateRange } from "@/lib/utils";
 
 const COLORS = {
@@ -103,7 +103,7 @@ export interface ProposalPdfData {
   clientEmail: string;
   eventType: string;
   /** Raw event kind, drives which detailed pages lead the proposal. */
-  eventKind: EventKind;
+  eventKind: string;
   eventDate: string;
   venue?: string | null;
   timeline: TimelineItem[];
@@ -183,11 +183,6 @@ function ProposalDocument({ data }: { data: ProposalPdfData }) {
           </View>
         )}
 
-        <View style={styles.totalRow}>
-          <Text style={styles.totalLabel}>Total</Text>
-          <Text style={styles.totalValue}>{inr(data.total)}</Text>
-        </View>
-
         {data.deliverables.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.label}>Deliverables</Text>
@@ -206,6 +201,11 @@ function ProposalDocument({ data }: { data: ProposalPdfData }) {
           </View>
         )}
 
+        <View style={styles.totalRow}>
+          <Text style={styles.totalLabel}>Total</Text>
+          <Text style={styles.totalValue}>{inr(data.total)}</Text>
+        </View>
+
         {data.notes ? (
           <View style={styles.section}>
             <Text style={styles.label}>Notes</Text>
@@ -214,7 +214,7 @@ function ProposalDocument({ data }: { data: ProposalPdfData }) {
         ) : null}
 
         <Text style={styles.footer} fixed>
-          Sanctified Studio · hello@sanctifiedstudio.com · Thank you for
+          Sanctified Studio · sanctifiedstudiojbp@gmail.com · Thank you for
           considering us.
         </Text>
       </Page>

@@ -9,14 +9,13 @@ export function Hero() {
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-5 py-16 md:grid-cols-2 md:py-24">
         <Reveal>
           <p className="text-sm uppercase tracking-[0.2em] text-clay">
-            Wedding & baby shower photography
+            Weddings and Maternity Studio
           </p>
           <h1 className="mt-4 font-display text-6xl leading-[1.05] text-espresso md:text-7xl">
-            Moments worth keeping.
+            We Create Memories for Life.
           </h1>
           <p className="mt-6 max-w-md text-lg text-muted">
-            Sanctified Studio captures the quiet, in-between moments — warm,
-            unhurried, and true to you.
+            Sanctified Studio captures every moment with purity to deliver eternal memories of life.
           </p>
           <div className="mt-8 space-y-3">
             <Button asChild size="lg">
@@ -27,7 +26,7 @@ export function Hero() {
                 <Link href="/weddings">Weddings</Link>
               </Button>
               <Button asChild size="lg" variant="blush">
-                <Link href="/baby-showers">Baby showers</Link>
+                <Link href="/maternity">Maternity</Link>
               </Button>
             </div>
           </div>

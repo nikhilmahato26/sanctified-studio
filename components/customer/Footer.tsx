@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
-import { InstagramIcon, FacebookIcon } from "@/components/customer/SocialIcons";
+import { InstagramIcon, YoutubeIcon } from "@/components/customer/SocialIcons";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -10,8 +10,7 @@ export function Footer() {
         <div className="lg:col-span-2">
           <p className="font-display text-2xl">Sanctified Studio</p>
           <p className="mt-3 max-w-sm text-sm text-cream/80">
-            Moments worth keeping. Wedding and baby shower photography, made with
-            warmth and care.
+            We commemorate every moment of your joyous ceremonies, preserving them indefinitely.
           </p>
         </div>
 
@@ -24,18 +23,18 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/baby-showers" className="hover:underline">
-                Baby showers
+              <Link href="/maternity" className="hover:underline">
+                Maternity
               </Link>
             </li>
             <li>
-              <Link href="/about" className="hover:underline">
-                About
+              <Link href="/baby-shoot" className="hover:underline">
+                Baby shoot
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="hover:underline">
-                Contact
+              <Link href="/gallery" className="hover:underline">
+                Gallery
               </Link>
             </li>
           </ul>
@@ -46,29 +45,45 @@ export function Footer() {
           <ul className="mt-3 space-y-2 text-sm">
             <li className="flex items-center gap-2">
               <Mail className="size-4" />
-              <a href="mailto:hello@sanctifiedstudio.com" className="hover:underline">
-                hello@sanctifiedstudio.com
+              <a href="mailto:sanctifiedstudiojbp@gmail.com" className="hover:underline">
+                sanctifiedstudiojbp@gmail.com
               </a>
             </li>
             <li className="flex items-center gap-2">
               <Phone className="size-4" />
-              <span>+91 90000 00000</span>
+              <span>+91 98274 11116</span>
             </li>
           </ul>
-          <div className="mt-4 flex gap-3">
+          <div className="mt-4 flex flex-wrap gap-2">
             <a
-              href="https://instagram.com"
-              aria-label="Instagram"
-              className="rounded-full bg-cream/10 p-2 hover:bg-cream/20"
+              href="https://www.instagram.com/sanctified_studios_jbp?igsh=amh1dW5uamM3bWlr"
+              title="Wedding Instagram"
+              className="flex items-center gap-2 rounded-full bg-cream/10 px-3 py-2 hover:bg-cream/20"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <InstagramIcon className="size-4" />
+              <span className="text-xs">Wedding</span>
             </a>
             <a
-              href="https://facebook.com"
-              aria-label="Facebook"
-              className="rounded-full bg-cream/10 p-2 hover:bg-cream/20"
+              href="https://www.instagram.com/sanctified_baby_studio?igsh=YTgyNjNydzM5cmRz"
+              title="Baby & Maternity Instagram"
+              className="flex items-center gap-2 rounded-full bg-cream/10 px-3 py-2 hover:bg-cream/20"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <FacebookIcon className="size-4" />
+              <InstagramIcon className="size-4" />
+              <span className="text-xs">Baby & Maternity</span>
+            </a>
+            <a
+              href="https://youtube.com/@sanctified_studio?si=87tqM_VHcJOSW2UG"
+              title="YouTube"
+              className="flex items-center gap-2 rounded-full bg-cream/10 px-3 py-2 hover:bg-cream/20"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <YoutubeIcon className="size-4" />
+              <span className="text-xs">YouTube</span>
             </a>
           </div>
         </div>

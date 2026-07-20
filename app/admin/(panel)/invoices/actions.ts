@@ -6,7 +6,7 @@ import { requireAdmin } from "@/lib/session";
 import { sendMail } from "@/lib/mailer";
 import { renderInvoicePdf } from "@/lib/pdf/invoice";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { EVENT_TYPE } from "@/lib/status";
+
 
 export type ActionState = { error?: string; ok?: boolean };
 
@@ -56,7 +56,7 @@ export async function sendInvoice(invoiceId: string): Promise<ActionState> {
       invoiceNumber: invoiceId.slice(-6).toUpperCase(),
       clientName: client.name,
       clientEmail: client.email,
-      eventType: EVENT_TYPE[event.type].label,
+      eventType: event.type,
       eventDate: formatDate(event.eventDate),
       totalAmount: invoice.totalAmount,
       advancePaid: invoice.advancePaid,
