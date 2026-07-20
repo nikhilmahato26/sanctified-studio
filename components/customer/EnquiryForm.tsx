@@ -115,7 +115,7 @@ export function EnquiryForm({ categories = [] }: { categories?: Category[] }) {
         </div>
         <div>
           <Label htmlFor="preferredDate">Preferred date(s)</Label>
-          <Input id="preferredDate" name="preferredDate" type="text" placeholder="DD/MM/YYYY" />
+          <Input id="preferredDate" name="preferredDate" type="text" placeholder="DD/MM/YYYY or 24-26 May" />
         </div>
         <div className="sm:col-span-2">
           <Label htmlFor="message">Message</Label>
