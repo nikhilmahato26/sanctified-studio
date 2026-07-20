@@ -11,24 +11,6 @@ export const dynamic = "force-dynamic";
 export default async function GalleryPage() {
   await requireAdmin();
 
-  if (!isCloudinaryConfigured) {
-    return (
-      <>
-        <PageHeader
-          title="Gallery"
-          description="Manage the photos shown on the public site."
-        />
-        <div className="rounded-2xl border border-dashed border-line bg-white/40 p-8 text-sm text-muted">
-          Cloudinary isn&apos;t configured yet. Add{" "}
-          <code className="font-mono">CLOUDINARY_CLOUD_NAME</code>,{" "}
-          <code className="font-mono">CLOUDINARY_API_KEY</code> and{" "}
-          <code className="font-mono">CLOUDINARY_API_SECRET</code> to your
-          environment to upload and manage gallery photos.
-        </div>
-      </>
-    );
-  }
-
   const [wedding, baby, youtubeLinks] = await Promise.all([
     getGalleryImages("wedding", 60),
     getGalleryImages("baby-shower", 60),
@@ -44,8 +26,18 @@ export default async function GalleryPage() {
     <>
       <PageHeader
         title="Gallery"
-        description="Photos here appear on the public weddings and maternity pages."
+        description="Photos and videos here appear on the public weddings and maternity pages."
       />
+      
+      {!isCloudinaryConfigured && (
+        <div className="mb-8 rounded-2xl border border-dashed border-line bg-white/40 p-8 text-sm text-muted">
+          Cloudinary isn&apos;t configured yet. Add{" "}
+          <code className="font-mono">CLOUDINARY_CLOUD_NAME</code>,{" "}
+          <code className="font-mono">CLOUDINARY_API_KEY</code> and{" "}
+          <code className="font-mono">CLOUDINARY_API_SECRET</code> to your
+          environment to upload and manage gallery photos. You can still manage YouTube videos below.
+        </div>
+      )}
       <div className="space-y-12">
         <div>
           <GalleryManager type="wedding" title="Weddings" images={wedding} />
