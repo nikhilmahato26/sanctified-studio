@@ -49,7 +49,7 @@ export async function uploadGalleryImage(
   }
 
   revalidatePath("/admin/gallery");
-  revalidatePath(type === "wedding" ? "/weddings" : "/baby-showers");
+  revalidatePath(type === "wedding" ? "/weddings" : "/maternity");
   return { ok: true };
 }
 

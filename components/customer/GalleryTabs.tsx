@@ -2,20 +2,14 @@
 
 import { useState } from "react";
 import { GalleryGrid } from "@/components/customer/GalleryGrid";
-
-interface Image {
-  id: string;
-  url: string;
-  width: number;
-  height: number;
-}
+import type { GalleryImage } from "@/lib/gallery";
 
 export function GalleryTabs({
   weddingImages,
   maternityImages,
 }: {
-  weddingImages: Image[];
-  maternityImages: Image[];
+  weddingImages: GalleryImage[];
+  maternityImages: GalleryImage[];
 }) {
   const [activeTab, setActiveTab] = useState<"weddings" | "maternity">("weddings");
 

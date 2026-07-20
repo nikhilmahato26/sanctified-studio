@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { GalleryGrid } from "@/components/customer/GalleryGrid";
+import { YoutubeCarousel } from "@/components/customer/YoutubeCarousel";
 import { Reveal } from "@/components/customer/Reveal";
 import { getGalleryImages } from "@/lib/gallery";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Maternity",
@@ -16,6 +18,10 @@ export const revalidate = 300;
 
 export default async function MaternityPage() {
   const images = await getGalleryImages("baby-shower");
+  const youtubeLinks = await prisma.youtubeLink.findMany({
+    where: { category: "baby-shower" },
+    orderBy: { createdAt: "desc" },
+  });
 
   return (
     <>
@@ -39,6 +45,7 @@ export default async function MaternityPage() {
         <GalleryGrid tone="blush" label="Maternity" images={images} />
       </section>
 
+      <YoutubeCarousel links={youtubeLinks} title="Maternity Films" />
 
       <section className="mx-auto max-w-6xl px-5 pb-24">
         <div className="rounded-2xl bg-blush/35 px-8 py-12 text-center">
