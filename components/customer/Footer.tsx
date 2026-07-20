@@ -12,9 +12,9 @@ export function Footer() {
           <Image 
             src="/logo.png" 
             alt="Sanctified Studio" 
-            width={180} 
-            height={50} 
-            className="h-12 w-auto object-contain"
+            width={280} 
+            height={80} 
+            className="h-20 w-auto object-contain"
           />
           <p className="max-w-xs text-sm text-cream/80">
             We commemorate every moment of your joyous ceremonies, preserving them indefinitely.
